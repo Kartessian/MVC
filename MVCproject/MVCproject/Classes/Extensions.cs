@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Web;
 
 namespace MVCproject
@@ -28,6 +29,24 @@ namespace MVCproject
                 rows.Add(row);
             }
             return serializer.Serialize(rows);
+        }
+
+        /// <summary>
+        /// Serialize a List of ITable into a JSON string
+        /// </summary>
+        public static string ToJson(this List<ITable> source)
+        {
+            System.Web.Script.Serialization.JavaScriptSerializer serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+            return serializer.Serialize(source);
+        }
+
+        /// <summary>
+        /// Serialize an ITable into a JSON string
+        /// </summary>
+        public static string ToJson(this ITable source)
+        {
+            System.Web.Script.Serialization.JavaScriptSerializer serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+            return serializer.Serialize(source);
         }
 
     }

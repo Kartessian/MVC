@@ -27,7 +27,17 @@ namespace MVCproject.Controllers
 
             ContentResult result = new ContentResult();
             result.ContentType = "application/json";
-            result.Content = database.fillDataTable("select * from users").ToJson();
+
+            // the database class offers two different ways to access the data into the database
+            // (comment the one you are not going to use)
+
+            // #1 write your own query
+            result.Content = database.GetDataTable("select * from users").ToJson();
+
+            // #2 use an ITable object to query the database
+            result.Content = database.GetRecords<User>().ToJson();
+
+
 
             return result;
         }

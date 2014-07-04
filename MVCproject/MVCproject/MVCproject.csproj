@@ -133,6 +133,8 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Database\Database.cs" />
+    <Compile Include="Database\ITable.cs" />
+    <Compile Include="Database\User.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

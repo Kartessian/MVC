@@ -54,7 +54,7 @@ namespace MVCproject.Controllers
             // initiate the database only if it is needed
             if (!omit_database)
             {
-                database = new Database();
+                database = new Database(ConfigurationManager.AppSettings["connectionString"].ToString());
             }
 
             base.OnActionExecuting(filterContext);
