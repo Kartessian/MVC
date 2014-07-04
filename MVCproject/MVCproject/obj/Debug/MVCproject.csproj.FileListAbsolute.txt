@@ -34,3 +34,4 @@ C:\Users\jchaos\Documents\GitHub\mvc\MVC\MVCproject\MVCproject\bin\System.Web.We
 C:\Users\jchaos\Documents\GitHub\mvc\MVC\MVCproject\MVCproject\obj\Debug\MVCproject.csproj.App.config
 C:\Users\jchaos\Documents\GitHub\mvc\MVC\MVCproject\MVCproject\obj\Debug\MVCproject.dll
 C:\Users\jchaos\Documents\GitHub\mvc\MVC\MVCproject\MVCproject\obj\Debug\MVCproject.pdb
+C:\Users\jchaos\Documents\GitHub\mvc\MVC\MVCproject\MVCproject\obj\Debug\MVCproject.csprojResolveAssemblyReference.cache
