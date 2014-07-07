@@ -13,9 +13,12 @@ namespace MVCproject.Controllers
         protected bool cache_enabled = false;
         protected bool cache_attribute = false;
         protected string cache_path = null;
+        protected string cache_ID = null;
         protected bool omit_database = false;
 
         protected Database database = null;
+
+        protected ICache cache = null;
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
@@ -35,20 +38,24 @@ namespace MVCproject.Controllers
                 // notice as well that the extensino and the contentype used is JSON
                 // as in this example is intended to be used to cache json content only
                 // (there is no a real reason for this except to make something specific, you can cache whatever you want)
-                cache_path = ConfigurationManager.AppSettings["cache_folder"] + filterContext.ActionDescriptor.ActionName + "_" +
-                    string.Join("_", filterContext.ActionParameters.Values)
-                    + ".json";
+                cache_path = ConfigurationManager.AppSettings["cache_folder"];
+                cache_ID = filterContext.ActionDescriptor.ActionName + "_" + string.Join("_", filterContext.ActionParameters.Values) + ".json";
+
+                cache = new FileCache(cache_path);
+                
+                String cached = cache.Get(cache_ID);
 
                 // if the file exist
-                if (System.IO.File.Exists(cache_path))
+                if (cached != null)
                 {
                     var result = new ContentResult();
                     result.ContentType = "application/json";
-                    result.Content = System.IO.File.ReadAllText(cache_path, Encoding.UTF8);
+                    result.Content = cached;
 
                     filterContext.Result = result;
                     return;
                 }
+                
             }
 
             // initiate the database only if it is needed
@@ -67,12 +74,12 @@ namespace MVCproject.Controllers
 
             // if the cache is enabled, after processing the request it will create a temporary file with the result
             // so next time is being accesed, it will return the file directly
-            if (cache_enabled && cache_attribute)
+            if (cache != null)
             {
                 //working only for now for ContentResult
                 if (filterContext.Result is ContentResult)
                 {
-                    System.IO.File.WriteAllText(cache_path, ((System.Web.Mvc.ContentResult)(filterContext.Result)).Content, Encoding.UTF8);
+                    cache.Add(new FileCacheObject(cache_ID, ((System.Web.Mvc.ContentResult)(filterContext.Result)).Content, null));
                 }
             }
 
