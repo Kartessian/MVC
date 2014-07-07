@@ -9,7 +9,7 @@ Kartessian implements a custom server side cache system. The advantages are visi
 
 How it works:
 
-Kartessian overrides the default Controller class to implement this Cache feature, creating a custom [https://github.com/Kartessian/MVC/blob/master/MVCproject/MVCproject/Controllers/BaseController.cs](BaseController) class.
+Kartessian overrides the default Controller class to implement this Cache feature, creating a custom [BaseController](https://github.com/Kartessian/MVC/blob/master/MVCproject/MVCproject/Controllers/BaseController.cs) class.
 
 And then as simple as:
 
@@ -23,7 +23,7 @@ And then as simple as:
   
 ```
 
-Next step is use custom [https://github.com/Kartessian/MVC/blob/master/MVCproject/MVCproject/Classes/Attributes.cs](Attributes) created to define when a Request will be cacheable or not.
+Next step is use custom [Attributes](https://github.com/Kartessian/MVC/blob/master/MVCproject/MVCproject/Classes/Attributes.cs) created to define when a Request will be cacheable or not.
 
 ```csharp
   
@@ -35,7 +35,7 @@ Next step is use custom [https://github.com/Kartessian/MVC/blob/master/MVCprojec
   
 ```
 
-The [https://github.com/Kartessian/MVC/blob/master/MVCproject/MVCproject/Controllers/BaseController.cs](BaseController) will now handle when the Attribute is present and create a cache file with the Response.
+The [BaseController](https://github.com/Kartessian/MVC/blob/master/MVCproject/MVCproject/Controllers/BaseController.cs) will now handle when the Attribute is present and create a cache file with the Response.
 
 Next time the same Request is requested, the Controller will check if there is a cache file with the Response and if it is it will return the content of the file instead of process the entire Request.
 
@@ -45,7 +45,7 @@ In the web.config you can find the parameters needed to enable/disable the cache
 
 This projects uses the SQLClient Class to connect to a SQL Server Database. (You can replace it with any other like MySQLClient to connect to the database of your choice. The code is pretty standar, just need to change the object names.)
 
-The logic is in the [https://github.com/Kartessian/MVC/blob/master/MVCproject/MVCproject/Database/Database.cs](Database.cs) file, where you will find some basic functionallity: ExecuteSQL, ExecuteScalar, GetDataTable, BeginTransaction, etc...
+The logic is in the [Database](https://github.com/Kartessian/MVC/blob/master/MVCproject/MVCproject/Database/Database.cs) file, where you will find some basic functionallity: ExecuteSQL, ExecuteScalar, GetDataTable, BeginTransaction, etc...
 
 
 The ussage is simple:
@@ -63,7 +63,7 @@ The ussage is simple:
 
 ```
 
-If you don't want to use SQL code you can take advantage of the [https://github.com/Kartessian/MVC/blob/master/MVCproject/MVCproject/Database/ITable.cs](ITable) interface.
+If you don't want to use SQL code you can take advantage of the [ITable](https://github.com/Kartessian/MVC/blob/master/MVCproject/MVCproject/Database/ITable.cs) interface.
 You then can create a class that matches the column names in the table with the properties you create into it, like:
 
 ```csharp
