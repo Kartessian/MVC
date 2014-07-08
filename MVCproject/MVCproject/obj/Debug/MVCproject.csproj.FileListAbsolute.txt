@@ -36,7 +36,6 @@ C:\Users\jchaos\Documents\GitHub\mvc\MVC\MVCproject\MVCproject\obj\Debug\MVCproj
 C:\Users\jchaos\Documents\GitHub\mvc\MVC\MVCproject\MVCproject\obj\Debug\MVCproject.pdb
 C:\Users\jchaos\Documents\GitHub\mvc\MVC\MVCproject\MVCproject\obj\Debug\MVCproject.csprojResolveAssemblyReference.cache
 C:\Users\Usuario\Documents\GitHub\MVC\MVCproject\MVCproject\obj\Debug\MVCproject.csproj.App.config
-C:\Users\Usuario\Documents\GitHub\MVC\MVCproject\MVCproject\obj\Debug\MVCproject.csprojResolveAssemblyReference.cache
 C:\Users\Usuario\Documents\GitHub\MVC\MVCproject\MVCproject\obj\Debug\MVCproject.dll
 C:\Users\Usuario\Documents\GitHub\MVC\MVCproject\MVCproject\obj\Debug\MVCproject.pdb
 C:\Users\Usuario\Documents\GitHub\MVC\MVCproject\MVCproject\bin\MVCproject.dll.config
@@ -72,3 +71,7 @@ C:\Users\Usuario\Documents\GitHub\MVC\MVCproject\MVCproject\bin\System.Web.Razor
 C:\Users\Usuario\Documents\GitHub\MVC\MVCproject\MVCproject\bin\System.Web.WebPages.xml
 C:\Users\Usuario\Documents\GitHub\MVC\MVCproject\MVCproject\bin\System.Web.WebPages.Deployment.xml
 C:\Users\Usuario\Documents\GitHub\MVC\MVCproject\MVCproject\bin\System.Web.WebPages.Razor.xml
+C:\Users\Usuario\Documents\GitHub\MVC\MVCproject\MVCproject\bin\MongoDB.Bson.dll
+C:\Users\Usuario\Documents\GitHub\MVC\MVCproject\MVCproject\bin\MongoDB.Driver.dll
+C:\Users\Usuario\Documents\GitHub\MVC\MVCproject\MVCproject\bin\MongoDB.Bson.xml
+C:\Users\Usuario\Documents\GitHub\MVC\MVCproject\MVCproject\bin\MongoDB.Driver.xml

@@ -20,17 +20,17 @@ namespace MVCproject
 
         public void Add(ICacheObject cacheObject)
         {
-            System.IO.File.WriteAllText(cachePath_ + cacheObject.ID + ".cache" , cacheObject.CachedObject.ToString(), Encoding.UTF8);
+            System.IO.File.WriteAllText(cachePath_ + cacheObject.Id + ".cache", cacheObject.CachedObject.ToString(), Encoding.UTF8);
 
             if (cacheObject.Expiration != null)
             {
-                System.IO.File.WriteAllText(cachePath_ + cacheObject.ID + ".exp", ((DateTime)cacheObject.Expiration).ToString("yyyy|MM|dd|HH|mm|ss"), Encoding.UTF8);
+                System.IO.File.WriteAllText(cachePath_ + cacheObject.Id + ".exp", ((DateTime)cacheObject.Expiration).ToString("yyyy|MM|dd|HH|mm|ss"), Encoding.UTF8);
             }
         }
 
-        public string Get(string ID)
+        public string Get(string Id)
         {
-            string file = cachePath_ + ID;
+            string file = cachePath_ + Id;
             if (System.IO.File.Exists(file + ".cache"))
             {
                 if (isExpired(file))
@@ -46,10 +46,10 @@ namespace MVCproject
             }
         }
 
-        public T Get<T>(string ID)
+        public T Get<T>(string Id)
         {
 
-            string file = cachePath_ + ID ;
+            string file = cachePath_ + Id;
 
             if (System.IO.File.Exists(file + ".cache"))
             {
@@ -73,9 +73,9 @@ namespace MVCproject
             }
         }
 
-        public void Remove(string ID)
+        public void Remove(string Id)
         {
-            string file = cachePath_ + ID ;
+            string file = cachePath_ + Id;
             if (System.IO.File.Exists(file + ".cache"))
             {
                 try
@@ -128,14 +128,15 @@ namespace MVCproject
     [Serializable]
     public class FileCacheObject : ICacheObject
     {
-        public string ID { get; set; }
+        public string Id { get; set; }
 
         public object CachedObject { get; set; }
 
         public DateTime? Expiration { get; set; }
 
-        public FileCacheObject(string ID, object CachedObject, DateTime? Expiration) {
-            this.ID = ID;
+        public FileCacheObject(string Id, object CachedObject, DateTime? Expiration)
+        {
+            this.Id = Id;
 
             if (CachedObject is String) {
 

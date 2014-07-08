@@ -10,7 +10,7 @@ namespace MVCproject
     public interface ICacheObject
     {
 
-        string ID {get; set;}
+        string Id { get; set; }
 
         object CachedObject {get; set;}
 
@@ -24,11 +24,11 @@ namespace MVCproject
 
         void Add(ICacheObject cacheObject);
 
-        string Get(string ID);
+        string Get(string Id);
 
-        T Get<T>(string ID);
+        T Get<T>(string Id);
 
-        void Remove(string ID);
+        void Remove(string Id);
 
 
     }

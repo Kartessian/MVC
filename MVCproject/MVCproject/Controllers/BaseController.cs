@@ -12,7 +12,6 @@ namespace MVCproject.Controllers
     {
         protected bool cache_enabled = false;
         protected bool cache_attribute = false;
-        protected string cache_path = null;
         protected string cache_ID = null;
         protected bool omit_database = false;
 
@@ -32,20 +31,15 @@ namespace MVCproject.Controllers
             // if the attribute cache is present and the cache is enabled in the parameter in the web.config file
             if (cache_enabled && cache_attribute)
             {
-                // create an unique cache file for each request, using the action and the parameters used
-                // notice that could be some issues if the lenght of the file name generate is too long (+260 characteres)
-                // http://msdn.microsoft.com/en-us/library/windows/desktop/aa365247(v=vs.85).aspx
-                // notice as well that the extensino and the contentype used is JSON
-                // as in this example is intended to be used to cache json content only
-                // (there is no a real reason for this except to make something specific, you can cache whatever you want)
-                cache_path = ConfigurationManager.AppSettings["cache_folder"];
-                cache_ID = filterContext.ActionDescriptor.ActionName + "_" + string.Join("_", filterContext.ActionParameters.Values) + ".json";
 
-                cache = new FileCache(cache_path);
+                cache_ID = filterContext.ActionDescriptor.ActionName + "_" + string.Join("_", filterContext.ActionParameters.Values);
+
+                //cache = new FileCache(cache_path);
+                cache = new MongoCache();
                 
                 String cached = cache.Get(cache_ID);
 
-                // if the file exist
+                // if the item is already in the "cache"
                 if (cached != null)
                 {
                     var result = new ContentResult();
@@ -79,7 +73,7 @@ namespace MVCproject.Controllers
                 //working only for now for ContentResult
                 if (filterContext.Result is ContentResult)
                 {
-                    cache.Add(new FileCacheObject(cache_ID, ((System.Web.Mvc.ContentResult)(filterContext.Result)).Content, null));
+                    cache.Add(new MongoCacheObject(cache_ID, ((System.Web.Mvc.ContentResult)(filterContext.Result)).Content, DateTime.MaxValue));
                 }
             }
 
