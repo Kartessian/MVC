@@ -45,8 +45,11 @@ namespace MVCproject.Controllers
             ContentResult result = new ContentResult();
             result.ContentType = "application/json";
 
-            Converters c = new Converters(System.IO.File.ReadAllText(@"C:\Temp\CSV\20140306200349-293432.csv"));
-            result.Content = c.GetDataTable<FromCSV>().ToJson();
+            //Converters c = new Converters(System.IO.File.ReadAllText(@"C:\Temp\CSV\20140306200349-293432.csv"));
+            //result.Content = c.GetDataTable<FromCSV>().ToJson();
+
+            Converters c = new Converters(System.IO.File.ReadAllText(@"C:\Temp\eq.json"));
+            result.Content = c.GetDataTable<FromJSON>().ToJsonTable();
             
             
             return result;
