@@ -152,12 +152,15 @@
     <Compile Include="Classes\Extensions.cs" />
     <Compile Include="Classes\Converters\IConverter.cs" />
     <Compile Include="Controllers\BaseController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\DefaultController.cs" />
     <Compile Include="Database\Database.cs" />
     <Compile Include="Database\ITable.cs" />
     <Compile Include="Database\User.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Handlers\uploadFile.ashx.cs">
+      <DependentUpon>uploadFile.ashx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -188,6 +191,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Home\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Handlers\uploadFile.ashx" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

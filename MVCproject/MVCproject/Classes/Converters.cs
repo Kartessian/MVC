@@ -7,21 +7,12 @@ using System.Web;
 namespace MVCproject
 {
 
-    public class Converters
+    public static class Converters
     {
 
-        string source_;
-
-        public Converters(string source)
+        public static DataTable GetDataTable<T>(string content) where T:IConverter, new()
         {
-            this.source_ = source;
-        }
-
-
-        public DataTable GetDataTable<T>() where T:IConverter, new()
-        {
-
-            return new T().ToDataTable(source_);
+            return new T().ToDataTable(content);
         }
 
     }

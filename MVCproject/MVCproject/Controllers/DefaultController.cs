@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace MVCproject.Controllers
 {
-    public class HomeController : BaseController
+    public class DeftaulController : BaseController
     {
         [OmitDatabase()]
         public ActionResult Index()
@@ -48,8 +48,8 @@ namespace MVCproject.Controllers
             //Converters c = new Converters(System.IO.File.ReadAllText(@"C:\Temp\CSV\20140306200349-293432.csv"));
             //result.Content = c.GetDataTable<FromCSV>().ToJson();
 
-            Converters c = new Converters(System.IO.File.ReadAllText(@"C:\Temp\eq.json"));
-            result.Content = c.GetDataTable<FromJSON>().ToJsonTable();
+            //Converters c = new Converters(System.IO.File.ReadAllText(@"C:\Temp\eq.json"));
+            //result.Content = c.GetDataTable<FromJSON>().ToJsonTable();
 
             //Converters c = new Converters(@"C:\Temp\temp.xlsx");
             //result.Content = c.GetDataTable<FromExcel>().ToJsonTable();
