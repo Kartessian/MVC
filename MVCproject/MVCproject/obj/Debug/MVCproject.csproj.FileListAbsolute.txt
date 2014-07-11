@@ -75,3 +75,4 @@ C:\Users\Usuario\Documents\GitHub\MVC\MVCproject\MVCproject\bin\MongoDB.Bson.dll
 C:\Users\Usuario\Documents\GitHub\MVC\MVCproject\MVCproject\bin\MongoDB.Driver.dll
 C:\Users\Usuario\Documents\GitHub\MVC\MVCproject\MVCproject\bin\MongoDB.Bson.xml
 C:\Users\Usuario\Documents\GitHub\MVC\MVCproject\MVCproject\bin\MongoDB.Driver.xml
+C:\Users\Usuario\Documents\GitHub\MVC\MVCproject\MVCproject\bin\MySql.Data.dll

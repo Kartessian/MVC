@@ -6,17 +6,18 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using MySql.Data.MySqlClient;
 
 namespace MVCproject
 {
     public class Database: IDisposable
     {
-        private SqlConnection _conn;
-        private SqlTransaction _tran;
+        private MySqlConnection _conn;
+        private MySqlTransaction _tran;
 
         public Database(string connectionString) {
 
-            _conn = new SqlConnection(connectionString);
+            _conn = new MySqlConnection(connectionString);
             _conn.Open();
         
         }
@@ -35,6 +36,15 @@ namespace MVCproject
             _tran = _conn.BeginTransaction(IsolationLevel.Serializable);
         }
 
+        public void Commit()
+        {
+            if (_tran != null)
+            {
+                _tran.Commit();
+                _tran.Dispose();
+            }
+        }
+
         public void RollBack()
         {
             if (_tran != null)
@@ -44,40 +54,42 @@ namespace MVCproject
             }
         }
 
-        private SqlCommand CreateCommand(string query, params KeyValuePair<string, object>[] Parameters)
+        private MySqlCommand CreateCommand(string query, params KeyValuePair<string, object>[] Parameters)
         {
-            SqlCommand comm;
+            MySqlCommand comm;
 
             if (_tran != null)
-                comm = new SqlCommand(query, _conn, _tran);
+                comm = new MySqlCommand(query, _conn, _tran);
             else
-                comm = new SqlCommand(query, _conn);
+                comm = new MySqlCommand(query, _conn);
 
-            foreach (KeyValuePair<string, object> pair in Parameters)
+            if (Parameters != null)
             {
-                if (pair.Value == null)
+                foreach (KeyValuePair<string, object> pair in Parameters)
                 {
-                    comm.Parameters.AddWithValue(pair.Key, DBNull.Value);
-                }
-                else
-                {
-                    comm.Parameters.AddWithValue(pair.Key, pair.Value);
+                    if (pair.Value == null)
+                    {
+                        comm.Parameters.AddWithValue(pair.Key, DBNull.Value);
+                    }
+                    else
+                    {
+                        comm.Parameters.AddWithValue(pair.Key, pair.Value);
+                    }
                 }
             }
-
             return comm;
         }
 
         public int ExecuteSQL(string query, params KeyValuePair<string, object>[] Parameters)
         {
-            SqlCommand comm = CreateCommand(query, Parameters);
+            MySqlCommand comm = CreateCommand(query, Parameters);
 
             return comm.ExecuteNonQuery();
         }
 
         public object ExecuteScalar(string query, params KeyValuePair<string, object>[] Parameters)
         {
-            SqlCommand comm = CreateCommand(query, Parameters);
+            MySqlCommand comm = CreateCommand(query, Parameters);
 
             return comm.ExecuteScalar();
         }
@@ -86,28 +98,9 @@ namespace MVCproject
         {
             DataTable oDataTable = new DataTable();
 
-            SqlCommand comm;
-            if (_tran != null)
-                comm = new SqlCommand(query, _conn, _tran);
-            else
-                comm = new SqlCommand(query, _conn);
-            if (Parameters != null)
-            {
-                foreach (KeyValuePair<string, object> pair in Parameters)
-                {
-                    string skey = pair.Key;
-                    if (!skey.StartsWith("@")) skey = "@" + skey;
-                    if (pair.Value == null)
-                    {
-                        comm.Parameters.AddWithValue(skey, DBNull.Value);
-                    }
-                    else
-                    {
-                        comm.Parameters.AddWithValue(skey, pair.Value);
-                    }
-                }
-            }
-            SqlDataAdapter oDataAdapter = new SqlDataAdapter(comm);
+            MySqlCommand comm = CreateCommand(query, Parameters);
+
+            MySqlDataAdapter oDataAdapter = new MySqlDataAdapter(comm);
             oDataAdapter.Fill(oDataTable);
             oDataAdapter.Dispose();
             comm.Dispose();
@@ -164,14 +157,17 @@ namespace MVCproject
             return properties;
         }
 
-        public void InsertDataTable(DataTable dt, string schema = null)
+        public bool InsertDataTable(DataTable dt, string schema = null)
         {
             schema = string.IsNullOrEmpty(schema) ? "" : "`" + schema + "`.";
 
             string tableName = dt.TableName;
 
             string sSQL = sSQL = "CREATE TABLE " + schema + "`" + tableName + "` (`id` INT NOT NULL AUTO_INCREMENT ";
+            string insertSQL = "insert into " + schema + "`" + tableName + "` (";
+            string parametersSQL = "";
 
+            int ix = 0;
             foreach (DataColumn column in dt.Columns)
             {
                 if(column.DataType == typeof(string)) {
@@ -189,9 +185,64 @@ namespace MVCproject
                 {
                     sSQL += ", `" + column.ColumnName + "` double DEFAULT NULL";
                 }
+
+
+                if (column.ColumnName.ToLower() == "id")
+                {
+                    insertSQL += ",`ktsn_" + column.ColumnName + "`";
+                }
+                else
+                {
+                    insertSQL += ",`" + column.ColumnName + "`";
+                }
+                parametersSQL += ",@param" + ix;
+
+                ix++;
             }
 
             sSQL += ", PRIMARY KEY (`id`), UNIQUE KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+
+            try
+            {
+                BeginTransaction();
+
+                // create the table
+                ExecuteSQL(sSQL);
+
+
+                insertSQL = insertSQL.Replace("(,`", "(`") + ") values (" + parametersSQL.Substring(1) + ")";
+
+                // prepare the table to optimize for bulk insert
+                ExecuteSQL("SET autocommit=0; SET unique_checks=0;");
+                ExecuteSQL("LOCK TABLES " + schema + "`" + tableName + "` WRITE");
+
+                // perform the inserts
+                foreach (DataRow row in dt.Rows)
+                {
+                    ix = 0;
+                    List<KeyValuePair<string, object>> paremeters = new List<KeyValuePair<string, object>>();
+                    foreach (DataColumn column in dt.Columns)
+                    {
+                        paremeters.Add(new KeyValuePair<string, object>("@param" + ix, row[column]));
+                        ix++;
+                    }
+
+                    ExecuteSQL(insertSQL, paremeters.ToArray());
+                }
+
+                // finish the bulk insert
+                ExecuteSQL("UNLOCK TABLES");
+                ExecuteSQL("SET unique_checks=1; SET autocommit=1; COMMIT;");
+
+                Commit();
+
+            }
+            catch {
+                RollBack();
+                return false;
+            }
+
+            return true;
         }
 
     }
