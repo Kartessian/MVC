@@ -50,6 +50,9 @@ namespace MVCproject.Controllers
 
             Converters c = new Converters(System.IO.File.ReadAllText(@"C:\Temp\eq.json"));
             result.Content = c.GetDataTable<FromJSON>().ToJsonTable();
+
+            //Converters c = new Converters(@"C:\Temp\temp.xlsx");
+            //result.Content = c.GetDataTable<FromExcel>().ToJsonTable();
             
             
             return result;

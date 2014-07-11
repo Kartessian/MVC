@@ -42,6 +42,9 @@
     <Reference Include="Antlr3.Runtime">
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="EPPlus">
+      <HintPath>..\packages\EPPlus.3.1.3.3\lib\net35\EPPlus.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="MongoDB.Bson">
       <HintPath>..\packages\mongocsharpdriver.1.9.2\lib\net35\MongoDB.Bson.dll</HintPath>
@@ -143,6 +146,7 @@
     <Compile Include="Cache\MongoCache.cs" />
     <Compile Include="Classes\Attributes.cs" />
     <Compile Include="Classes\Converters.cs" />
+    <Compile Include="Classes\Converters\FromExcel.cs" />
     <Compile Include="Classes\Converters\FromCSV.cs" />
     <Compile Include="Classes\Converters\FromJSON.cs" />
     <Compile Include="Classes\Extensions.cs" />

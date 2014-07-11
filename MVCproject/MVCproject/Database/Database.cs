@@ -171,6 +171,7 @@ namespace MVCproject
             foreach (DataColumn column in dt.Columns)
             {
                 if(column.DataType == typeof(string)) {
+                    // TODO - find the max length of the current values change the 255 with the value found.
                     sSQL += ", `" + column.ColumnName + "` varchar (255) DEFAULT NULL";
                 }
                 else if (column.DataType == typeof(DateTime))
@@ -180,6 +181,14 @@ namespace MVCproject
                 else if (column.DataType == typeof(int))
                 {
                     sSQL += ", `" + column.ColumnName + "` int DEFAULT NULL";
+                }
+                else if (column.DataType == typeof(long))
+                {
+                    sSQL += ", `" + column.ColumnName + "` bigint DEFAULT NULL";
+                }
+                else if (column.DataType == typeof(float))
+                {
+                    sSQL += ", `" + column.ColumnName + "` float DEFAULT NULL";
                 }
                 else if (column.DataType == typeof(double))
                 {

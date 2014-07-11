@@ -44,10 +44,10 @@ namespace MVCproject
                             item.Add((bool)property.Value);
                             break;
                         case JTokenType.None:
-                            item.Add(null);
+                            item.Add(DBNull.Value);
                             break;
                         case JTokenType.Null:
-                            item.Add(null);
+                            item.Add(DBNull.Value);
                             break;
                         case JTokenType.Uri:
                             item.Add(property.Value.ToString());
@@ -69,28 +69,28 @@ namespace MVCproject
                 switch (property.Value.Type)
                 {
                     case JTokenType.String:
-                        dt.Columns.Add(property.Key, typeof(string));
+                        dt.Columns.Add(property.Key.ToValidName(), typeof(string));
                         break;
                     case JTokenType.Integer:
-                        dt.Columns.Add(property.Key, typeof(long));
+                        dt.Columns.Add(property.Key.ToValidName(), typeof(long));
                         break;
                     case JTokenType.Float:
-                        dt.Columns.Add(property.Key, typeof(double));
+                        dt.Columns.Add(property.Key.ToValidName(), typeof(double));
                         break;
                     case JTokenType.Date:
-                        dt.Columns.Add(property.Key, typeof(DateTime));
+                        dt.Columns.Add(property.Key.ToValidName(), typeof(DateTime));
                         break;
                     case JTokenType.Boolean:
-                        dt.Columns.Add(property.Key, typeof(bool));
+                        dt.Columns.Add(property.Key.ToValidName(), typeof(bool));
                         break;
                     case JTokenType.None:
-                        dt.Columns.Add(property.Key);
+                        dt.Columns.Add(property.Key.ToValidName());
                         break;
                     case JTokenType.Null:
-                        dt.Columns.Add(property.Key);
+                        dt.Columns.Add(property.Key.ToValidName());
                         break;
                     case JTokenType.Uri:
-                        dt.Columns.Add(property.Key);
+                        dt.Columns.Add(property.Key.ToValidName());
                         break;
                 }
             }
