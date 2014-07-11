@@ -44,8 +44,6 @@ namespace MVCproject
             }
         }
 
-
-
         private SqlCommand CreateCommand(string query, params KeyValuePair<string, object>[] Parameters)
         {
             SqlCommand comm;
@@ -84,8 +82,6 @@ namespace MVCproject
             return comm.ExecuteScalar();
         }
 
-
-
         public DataTable GetDataTable(string query, params KeyValuePair<string, object>[] Parameters)
         {
             DataTable oDataTable = new DataTable();
@@ -118,8 +114,6 @@ namespace MVCproject
 
             return oDataTable;
         }
-
-
 
         public List<ITable> GetRecords<T>(KeyValuePair<string, object>[] parameters = null) where T : ITable, new()
         {
@@ -168,6 +162,36 @@ namespace MVCproject
             }
 
             return properties;
+        }
+
+        public void InsertDataTable(DataTable dt, string schema = null)
+        {
+            schema = string.IsNullOrEmpty(schema) ? "" : "`" + schema + "`.";
+
+            string tableName = dt.TableName;
+
+            string sSQL = sSQL = "CREATE TABLE " + schema + "`" + tableName + "` (`id` INT NOT NULL AUTO_INCREMENT ";
+
+            foreach (DataColumn column in dt.Columns)
+            {
+                if(column.DataType == typeof(string)) {
+                    sSQL += ", `" + column.ColumnName + "` varchar (255) DEFAULT NULL";
+                }
+                else if (column.DataType == typeof(DateTime))
+                {
+                    sSQL += ", `" + column.ColumnName + "` datetime DEFAULT NULL";
+                }
+                else if (column.DataType == typeof(int))
+                {
+                    sSQL += ", `" + column.ColumnName + "` int DEFAULT NULL";
+                }
+                else if (column.DataType == typeof(double))
+                {
+                    sSQL += ", `" + column.ColumnName + "` double DEFAULT NULL";
+                }
+            }
+
+            sSQL += ", PRIMARY KEY (`id`), UNIQUE KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
         }
 
     }

@@ -34,7 +34,6 @@ namespace MVCproject.Controllers
 
                 cache_ID = filterContext.ActionDescriptor.ActionName + "_" + string.Join("_", filterContext.ActionParameters.Values);
 
-                //cache = new FileCache(cache_path);
                 cache = new MongoCache();
                 
                 String cached = cache.Get(cache_ID);

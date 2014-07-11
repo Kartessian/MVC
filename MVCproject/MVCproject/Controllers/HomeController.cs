@@ -19,7 +19,6 @@ namespace MVCproject.Controllers
         /// returns a json string with all available users in the "users" table
         /// </summary>
         [Cache()]
-        //[OutputCache(Duration=60)]
         public ContentResult getUsers()
         {
             // The result of this request will be cached and next time will be returned instead of being created again
@@ -32,15 +31,25 @@ namespace MVCproject.Controllers
             // (comment the one you are not going to use)
 
             // #1 write your own query
-            result.Content = database.GetDataTable("select * from users").ToJson();
+            result.Content = database.GetDataTable("select * from users").ToJsonTable();
 
             // #2 use an ITable object to query the database
-            result.Content = database.GetRecords<User>().ToJson();
-
-
+            result.Content = database.GetRecords<User>().ToJsonTable<User>();
 
             return result;
         }
 
+        [OmitDatabase()]
+        public ContentResult test()
+        {
+            ContentResult result = new ContentResult();
+            result.ContentType = "application/json";
+
+            Converters c = new Converters(System.IO.File.ReadAllText(@"C:\Temp\CSV\20140306200349-293432.csv"));
+            result.Content = c.GetDataTable<FromCSV>().ToJson();
+            
+            
+            return result;
+        }
     }
 }

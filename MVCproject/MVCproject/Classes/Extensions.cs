@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.Serialization;
+using System.Text;
 using System.Web;
 
 namespace MVCproject
@@ -10,12 +12,21 @@ namespace MVCproject
     public static class Extensions
     {
         /// <summary>
+        /// This function will tranform the string into a valid Table Name for a SQL database
+        /// </summary>
+        public static string ToValidName(this string value) {
+            // still lot of work to do, but some basics.
+            return value.Replace(" ", "_").Replace("-", "_").Trim();
+        }
+
+        /// <summary>
         /// Parses a DataTable object into a JSON string
         /// </summary>
         /// <param name="dt">DataTable</param>
         /// <returns>JSON string</returns>
         public static string ToJson(this DataTable dt)
         {
+            // need to convert the datatable object in something that can be seralized
             System.Web.Script.Serialization.JavaScriptSerializer serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
             List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
             Dictionary<string, object> row;
@@ -47,6 +58,74 @@ namespace MVCproject
         {
             System.Web.Script.Serialization.JavaScriptSerializer serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
             return serializer.Serialize(source);
+        }
+
+        /// <summary>
+        ///  Serialize a DataTable into a JSON string in two objects: columns and data
+        ///  Columns contains an array of all the columns in the datatable
+        ///  Data contains and Array of Arrays with the content of the data table
+        ///  The response is supposed to be smaller than the ToJson(DataTable) method.
+        /// </summary>
+        public static string ToJsonTable(this DataTable dt)
+        {
+
+            StringBuilder sb = new StringBuilder();
+
+            foreach (DataColumn column in dt.Columns)
+            {
+                sb.Append(",'" + column.ColumnName + "'");
+            }
+
+            List<object[]> data = new List<object[]>();
+            foreach(DataRow row in dt.Rows) {
+                data.Add(row.ItemArray);
+            }
+
+            System.Web.Script.Serialization.JavaScriptSerializer serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+
+            string json = "{\"columns\":[" + sb.ToString().Substring(1) + "],\"data\":" + serializer.Serialize(data) + "}";
+
+            return json;
+        }
+
+        /// <summary>
+        ///  Serialize a DataTable into a JSON string in two objects: columns and data
+        ///  Columns contains an array of all the columns in the datatable
+        ///  Data contains and Array of Arrays with the content of the data table
+        ///  The response is supposed to be smaller than the ToJson(DataTable) method.
+        /// </summary>
+        /// <typeparam name="T">Needed in case the List if empty to at least return the properties</typeparam>
+        public static string ToJsonTable<T>(this List<ITable> source) where T: ITable
+        {
+            StringBuilder sb = new StringBuilder();
+            List<string> available_properties = new List<string>();
+
+            foreach (var property in typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(P => P.Name != "TableName"))
+            {
+                sb.Append(",'" + property.Name + "'");
+                available_properties.Add(property.Name);
+            }
+
+
+            List<object[]> data = new List<object[]>();
+            foreach (ITable item in source)
+            {
+                object[] values = new object[available_properties.Count];
+
+                var type = item.GetType();
+
+                for (int i = 0; i < available_properties.Count; i++)
+                {
+                    values[i] = type.GetProperty(available_properties[i]).GetValue(item, null);
+                }
+                data.Add(values);
+            }
+
+            System.Web.Script.Serialization.JavaScriptSerializer serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+
+            string json = "{\"columns\":[" + sb.ToString().Substring(1) + "],\"data\":" + serializer.Serialize(data) + "}";
+
+            return json;
         }
 
     }
