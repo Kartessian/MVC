@@ -17,6 +17,8 @@ namespace MVCproject.Handlers
 
         public void ProcessRequest(HttpContext context)
         {
+            // resonse will be a valid json
+            context.Response.ContentType = "application/json";
 
             // if there is no session, exit and 
             // validate the form to be sure there is one file only
@@ -27,6 +29,8 @@ namespace MVCproject.Handlers
                 context.Response.Write("\"Error\"");
                 return;
             }
+
+            int userId = (int)context.Session["user"];
 
             int mapId = int.Parse(context.Request.Form["map"]);
             string mimeType = context.Request.Form["type"];
@@ -70,10 +74,65 @@ namespace MVCproject.Handlers
                     return;
             }
 
-            context.Response.ContentType = "application/json";
-            context.Response.Write("{\"rows\":" + table.Rows + "}");
-
             // next step is put the datatable into the database for the user that uploaded the file
+            // no reason to start the database connection before in case something failed
+            // need to add some validations and try/catch before
+
+            Database db = new Database(ConfigurationManager.AppSettings["connectionString"].ToString());
+
+
+            // this is usually an intermediate step, so the user could never finish the process
+            // will check if it has any pending table from the last attempt and delete it before continue
+            object existing_table_name = db.ExecuteScalar("select tableName from datasets where name = @name", new KeyValuePair<string, object>("@name", userId + "temp-Name"));
+            if (existing_table_name != null && existing_table_name != DBNull.Value)
+            {
+                // remove the entry from the datasets table
+                db.ExecuteSQL("delete from `datasets` where name = @name", new KeyValuePair<string, object>("@name", userId + "temp-Name"));
+
+                // drop the table asocciated to the dataset
+                db.ExecuteSQL("drop table `datasets`.`" + existing_table_name + "`");
+
+                // can use the same table name, no need to generate a new one
+                table.TableName = (string)existing_table_name;
+            }
+            else
+            {
+
+                // assign a new unique name to the table
+                // need to be sure there is no table with that name already in the database
+                bool nameExist = true;
+                while (nameExist)
+                {
+                    table.TableName = Helpers.GenerateUniqueName();
+                    nameExist = db.ExistTable(table.TableName, "datasets");
+                }
+            }
+            
+            // all the data for the Datasets are located in its own schema "datasets" in the database, to keep 
+            // it separated from the application tables
+            if (db.InsertDataTable(table, "datasets"))
+            {
+                // once the table is created, add an entry to the "datasets" table
+                string sSQL = "insert into datasets (`name`,`createdon`,`access`,`filename`,`tmptable`,`rows`) values (@name,NOW(),'private',@filename,@tablename,@rows)";
+                db.ExecuteSQL(sSQL,
+                        new KeyValuePair<string, object>("@name", userId + "temp-Name"),
+                        new KeyValuePair<string, object>("@filename", tmp_file_name),
+                        new KeyValuePair<string, object>("@tablename", table.TableName),
+                        new KeyValuePair<string, object>("@rows", table.Rows.Count)
+                    );
+
+                // get the id of this dataset
+                sSQL = "select id from `datasets` where `name` = @name";
+                int new_dataset_id = (int)db.ExecuteScalar(sSQL, new KeyValuePair<string, object>("@name", userId + "temp-Name"));
+
+                context.Response.Write(
+                        string.Format("{\"id\":{0},\"rows\":{1}}", new_dataset_id, table.Rows.Count)
+                    );
+            }
+            else
+            {
+                context.Response.Write("\"Error\"");
+            }
         }
 
         public bool IsReusable

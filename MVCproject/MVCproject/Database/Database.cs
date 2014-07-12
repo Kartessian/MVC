@@ -80,6 +80,11 @@ namespace MVCproject
             return comm;
         }
 
+        public bool ExistTable(string schema, string tableName)
+        {
+            return 1 == (long)ExecuteScalar("select count(*) from information_schema.tables where table_schema = '" + schema + "' and table_name = '" + tableName + "'");
+        }
+
         public int ExecuteSQL(string query, params KeyValuePair<string, object>[] Parameters)
         {
             MySqlCommand comm = CreateCommand(query, Parameters);
