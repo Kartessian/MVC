@@ -6,7 +6,8 @@ using System.Web.Mvc;
 
 namespace MVCproject.Controllers
 {
-    public class DeftaulController : BaseController
+
+    public class DefaultController : BaseController
     {
         [OmitDatabase()]
         public ActionResult Index()

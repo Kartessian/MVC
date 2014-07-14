@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace MVCproject.Controllers
 {
@@ -18,6 +19,38 @@ namespace MVCproject.Controllers
         protected Database database = null;
 
         protected ICache cache = null;
+
+        protected override void OnAuthorization(AuthorizationContext filterContext)
+        {
+
+            string controller_name = filterContext.ActionDescriptor.ControllerDescriptor.ControllerName;
+            string action_name = filterContext.ActionDescriptor.ActionName;
+            Type action_type = (((System.Web.Mvc.ReflectedActionDescriptor)(filterContext.ActionDescriptor)).MethodInfo).ReturnType;
+
+            // if there is no session info for the user, redirect to the login page
+            if (Session["user"] == null && controller_name != "Account")
+            {
+
+                // depending on the type of action called, it should perform a redirect or return a json response
+                // don't want to break an ajax call due to an expired session returning a redirect to the login page
+
+                if (action_type == typeof(ActionResult))
+                {
+                    filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Account", action = "Login" }));
+                }
+                else
+                {
+                    var result = new ContentResult();
+                    result.ContentType = "application/json";
+                    result.Content = "\"Unauthorized\"";
+
+                    filterContext.Result = result;
+                    return;
+                }
+            }
+            
+
+        }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
