@@ -8,19 +8,40 @@ namespace MVCproject.Controllers
 {
     public class AccountController : BaseController
     {
-        public ActionResult Login(string username, string password)
+        [ValidateInput(false)]
+        public ActionResult Login(string username, string password, string remember)
         {
+
+            if (!String.IsNullOrEmpty(username) || !String.IsNullOrEmpty(password))
+            {
+                using (Account account = new Account(database))
+                {
+                    var user = account.GetUser(username, password);
+                    if (user != null)
+                    {
+                        Session["user"] = user;
+                        account.SetLastVisit(user.id, RequestIP());
+                        return RedirectToAction("Index", "Default");
+                    }
+                    else
+                    {
+                        ViewBag.error = "Email or Password not valid";
+                    }
+                }
+            }
+
             return View();
         }
 
+        [OmitDatabase]
         public ActionResult Logout()
         {
-            return View();
+            // Clean the session, that will do the job
+            Session.Clear();
+
+            // Shows the login page
+            return View("Login");
         }
 
-        public ActionResult UpdateAccount(string username, string password)
-        {
-            return View();
-        }
     }
 }

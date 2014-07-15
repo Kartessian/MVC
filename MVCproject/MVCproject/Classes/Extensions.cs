@@ -95,7 +95,7 @@ namespace MVCproject
         ///  The response is supposed to be smaller than the ToJson(DataTable) method.
         /// </summary>
         /// <typeparam name="T">Needed in case the List if empty to at least return the properties</typeparam>
-        public static string ToJsonTable<T>(this List<ITable> source) where T: ITable
+        public static string ToJsonTable<T>(this List<T> source) where T: ITable
         {
             StringBuilder sb = new StringBuilder();
             List<string> available_properties = new List<string>();

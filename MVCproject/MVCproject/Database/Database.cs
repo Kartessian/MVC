@@ -113,14 +113,34 @@ namespace MVCproject
             return oDataTable;
         }
 
-        public List<ITable> GetRecords<T>(KeyValuePair<string, object>[] parameters = null) where T : ITable, new()
+        public List<T> GetRecords<T>(params KeyValuePair<string, object>[] parameters) where T : ITable, new()
         {
-            List<ITable> result = new List<ITable>();
+            List<T> result = new List<T>();
 
             T newObject = new T();
 
             List<string> Properties = GetObjectProperties<T>();
-            DataTable dt = GetDataTable("select * from " + newObject.TableName, parameters);
+
+            List<string> where = new List<string>();
+            foreach (var param in parameters)
+            {
+                if (param.Key.StartsWith("@"))
+                {
+                    where.Add(param.Key.Substring(1) + " = " + param.Key);
+                }
+                else
+                {
+                    where.Add(param.Key + " = @" + param.Key);
+                }
+            }
+
+            string whereCondition = string.Empty;
+            if (where.Count > 0)
+            {
+                whereCondition = " where " + string.Join(" and ", where);
+            }
+
+            DataTable dt = GetDataTable("select * from " + newObject.TableName + whereCondition, parameters);
             for (int i = 0; i < Properties.Count; i++)
             {
                 if (!dt.Columns.Contains(Properties[i]))

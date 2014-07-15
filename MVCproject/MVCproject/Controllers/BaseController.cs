@@ -16,6 +16,8 @@ namespace MVCproject.Controllers
         protected string cache_ID = null;
         protected bool omit_database = false;
 
+        protected User user = null;
+
         protected Database database = null;
 
         protected ICache cache = null;
@@ -46,6 +48,13 @@ namespace MVCproject.Controllers
 
                     filterContext.Result = result;
                     return;
+                }
+            }
+            else
+            {
+                if (Session["user"] != null)
+                {
+                    user = (User)Session["user"];
                 }
             }
             

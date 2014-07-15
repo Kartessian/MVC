@@ -1,5 +1,40 @@
 ﻿@{
     ViewBag.Title = "Login";
+    Layout = "~/Views/Account/_Layout.cshtml";
 }
 
-<h2>Login</h2>
+<div class="tbl">
+    <div class="cll">
+        <div class="lgn">
+            <div style="float: left; padding: 5px 0;">
+                <a href="/"><img src="/images/kartessian.png" alt="Kartessian" /></a><small class="beta">BETA</small>
+            </div>
+            <div class="clear"></div>
+            <div style="height: 0; border-bottom: 1px solid #ddd; border-top: 1px solid #eee; margin: 8px 0 12px 0;"></div>
+            @if (ViewBag.error != null)
+            {
+                <div class="lgnerr">
+                    @ViewBag.error<span>!</span>
+                </div>
+            }
+            <div class="lgnbox">
+                <form action="/DoLogin">
+                    <span>Email</span>
+                    <input type="text" class="lgnipt" placeholder="email address" name="username" value="@ViewBag.email" />
+                    <br />
+                    <br />
+                    <span>Password</span>
+                    <input type="password" class="lgnipt" placeholder="password" name="password" value="" />
+                    <div>
+                        <input type="checkbox" id="remember" name="remember" @(ViewBag.remember == "on" ? "checked" : "")/>
+                        <label for="remember">Remember me</label>
+                        <button type="submit" class="bnGreen" style="width: 90px; float: right;">Login</button>
+                        <div class="clear"></div>
+                    </div>
+                </form>
+            </div>
+            <a href="/Register">Register</a> | <a href="/PasswordLost">Lost your password?</a>
+        </div>
+    </div>
+</div>
+<script>$(function () { $("form").attr("method", "post").attr("action", ""); })</script>

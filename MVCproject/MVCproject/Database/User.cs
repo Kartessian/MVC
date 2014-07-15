@@ -17,8 +17,13 @@ namespace MVCproject
         [PrimaryKeyDefinition(IsPrimaryKey: true, AutoNumeric: true)]
         public int id { get; set; }
 
-        public string firstName { get; set; }
-        public string lastName { get; set; }
+        public string email { get; set; }
+        public string password { get; set; }
+        public DateTime createdon { get; set; }
+        public DateTime lastvisit { get; set; }
+        public string createdIP { get; set; }
+        public string lastVisitIP { get; set; }
+
 
     }
 }
