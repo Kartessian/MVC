@@ -32,6 +32,23 @@ namespace MVCproject
                 );
         }
 
+        public bool EmailExist(string email)
+        {
+            return (long)database_.ExecuteScalar("select count(*) from `users` where `email` = @email",
+                    new KeyValuePair<string, object>("@email",email)
+                ) > 0;
+        }
+
+        public void CreateUser(string email, string name, string password, string ip)
+        {
+            string sSQL = "insert into `users` (`name`,`email`,`password`,`createdon`,`createdIP`) values (@name,@email,@password,NOW(),'" + ip + "')";
+            database_.ExecuteSQL(sSQL, new KeyValuePair<string, object>[] {
+                                                                                new KeyValuePair<string,object>("@name",name),
+                                                                                new KeyValuePair<string,object>("@email",email),
+                                                                                new KeyValuePair<string,object>("@password",password),
+                                                                            });
+        }
+
         public void Dispose()
         {
             database_ = null;

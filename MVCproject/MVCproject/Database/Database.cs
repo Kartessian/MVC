@@ -172,10 +172,25 @@ namespace MVCproject
             List<string> properties = new List<string>();
             foreach (PropertyInfo info in typeof(T).GetProperties())
             {
-
                 if (info.GetCustomAttribute(typeof(RelatedField), false) == null)
                 {
                     properties.Add(info.Name);
+                }
+            }
+
+            return properties;
+        }
+
+        private Dictionary<string,bool> GetITablePK<T>() where T : ITable
+        {
+            Dictionary<string, bool> properties = new Dictionary<string, bool>();
+            foreach (PropertyInfo info in typeof(T).GetProperties())
+            {
+                var attr = info.GetCustomAttribute(typeof(PrimaryKeyDefinition), false);
+
+                if (attr != null)
+                {
+                    properties.Add(info.Name, ((PrimaryKeyDefinition)attr).AutoNumeric);
                 }
             }
 

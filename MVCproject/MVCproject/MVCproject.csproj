@@ -175,6 +175,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Images\kartessian.png" />
+    <Content Include="Templates\email.html" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

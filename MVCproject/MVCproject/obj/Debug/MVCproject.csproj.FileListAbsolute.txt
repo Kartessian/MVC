@@ -76,3 +76,6 @@ C:\Users\Usuario\Documents\GitHub\MVC\MVCproject\MVCproject\bin\MongoDB.Driver.d
 C:\Users\Usuario\Documents\GitHub\MVC\MVCproject\MVCproject\bin\MongoDB.Bson.xml
 C:\Users\Usuario\Documents\GitHub\MVC\MVCproject\MVCproject\bin\MongoDB.Driver.xml
 C:\Users\Usuario\Documents\GitHub\MVC\MVCproject\MVCproject\bin\MySql.Data.dll
+C:\Users\Usuario\Documents\GitHub\MVC\MVCproject\MVCproject\bin\EPPlus.dll
+C:\Users\Usuario\Documents\GitHub\MVC\MVCproject\MVCproject\bin\EPPlus.xml
+C:\Users\Usuario\Documents\GitHub\MVC\MVCproject\MVCproject\obj\Debug\MVCproject.csprojResolveAssemblyReference.cache
