@@ -9,6 +9,23 @@ namespace MVCproject
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public class CacheAttribute : System.Attribute
     {
+
+        private int seconds_;
+
+        public readonly int seconds
+        {
+            get
+            {
+                return seconds_;
+            }
+
+        }
+
+        public CacheAttribute(int seconds)
+        {
+            this.seconds_ = seconds;
+        }
+
         public CacheAttribute()
         {
         }

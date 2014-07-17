@@ -157,6 +157,7 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\DefaultController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\EmbedController.cs" />
     <Compile Include="Database\Database.cs" />
     <Compile Include="Database\ITable.cs" />
     <Compile Include="Database\MapStyle.cs" />

@@ -12,8 +12,9 @@ namespace MVCproject.Controllers
     public class BaseController : Controller
     {
         protected bool cache_enabled = false;
-        protected bool cache_attribute = false;
+        protected CacheAttribute cache_attribute = null;
         protected string cache_ID = null;
+        protected int cache_duration = 0;
         protected bool omit_database = false;
 
         protected User user = null;
@@ -67,15 +68,14 @@ namespace MVCproject.Controllers
             cache_enabled = ConfigurationManager.AppSettings["cache_enabled"].ToString() == "true";
 
             // check custom attributes - if any
-            cache_attribute = filterContext.ActionDescriptor.GetCustomAttributes(typeof(CacheAttribute), false).FirstOrDefault() != null;
+            cache_attribute = (CacheAttribute)filterContext.ActionDescriptor.GetCustomAttributes(typeof(CacheAttribute), false).FirstOrDefault();
             omit_database = filterContext.ActionDescriptor.GetCustomAttributes(typeof(OmitDatabaseAttribute), false).FirstOrDefault() != null;
 
             // if the attribute cache is present and the cache is enabled in the parameter in the web.config file
-            if (cache_enabled && cache_attribute)
+            if (cache_enabled && cache_attribute != null)
             {
 
                 cache_ID = filterContext.ActionDescriptor.ActionName + "_" + string.Join("_", filterContext.ActionParameters.Values);
-
                 cache = new MongoCache();
                 
                 String cached = cache.Get(cache_ID);
@@ -114,7 +114,15 @@ namespace MVCproject.Controllers
                 //working only for now for ContentResult
                 if (filterContext.Result is ContentResult)
                 {
-                    cache.Add(new MongoCacheObject(cache_ID, ((System.Web.Mvc.ContentResult)(filterContext.Result)).Content, DateTime.MaxValue));
+
+                    DateTime duration = DateTime.MaxValue;
+                    
+                    if (cache_attribute.seconds > 0)
+                    {
+                        duration = DateTime.Now.AddSeconds(cache_attribute.seconds);
+                    }
+
+                    cache.Add(new MongoCacheObject(cache_ID, ((System.Web.Mvc.ContentResult)(filterContext.Result)).Content, duration));
                 }
             }
 

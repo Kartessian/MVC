@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 
@@ -9,7 +10,8 @@ namespace MVCproject.Controllers
 
     public class DefaultController : BaseController
     {
-
+        
+        [HttpGet]
         public ActionResult Index()
         {
             Default_Index model = new Default_Index();
@@ -89,12 +91,61 @@ namespace MVCproject.Controllers
         public JsonResult DeletePoint(int ds, int id) { return null; }
 
 
-
-
+        [ValidateInput(false)]
         [OmitDatabase()]
-        public ContentResult proxy(string url) { return null; }
+        [Cache(15)] // to prevent abuses, it will cache the results for 15 seconds.
+        public ContentResult proxy(string url) {
+            ContentResult result = new ContentResult();
+            result.ContentType = "application/json";
 
+            try
+            {
+                WebClient c = new WebClient();
+                c.Headers.Add("User-Agent", ".Net 4 WebClient Component");
+                result.Content = c.DownloadString(url);
+            }
+            catch (Exception ex)
+            {
+                result.Content = "{\"Error\":\"" + ex.Message.Replace("\"", "'") + "\"}";
+            }
+
+            return result;
+        }
+
+        [ValidateInput(false)]
         [OmitDatabase()]
-        public ContentResult analyze(string url) { return null; }
+        [Cache(15)] // to prevent abuses, it will cache the results for 15 seconds.
+        public ContentResult analyze(string url) {
+            ContentResult result = new ContentResult();
+            result.ContentType = "application/json";
+
+            string data;
+            try
+            {
+                WebClient c = new WebClient();
+                c.Headers.Add("User-Agent", ".Net 4 WebClient Component");
+                data = c.DownloadString(url);
+
+                var objects = Newtonsoft.Json.Linq.JArray.Parse(data);
+                List<string> fields = new List<string>();
+                foreach (Newtonsoft.Json.Linq.JToken root in objects)
+                {
+                    foreach (Newtonsoft.Json.Linq.JToken app in root)
+                    {
+                        fields.Add("\"" + ((Newtonsoft.Json.Linq.JProperty)(app)).Name + "\"");
+                    }
+                    break;
+                }
+                data = "[{\"fields\":[" + String.Join(",", fields.ToArray()) + "],\"count\":" + objects.Count() + "}]";
+            }
+            catch (Exception ex)
+            {
+                data = "{\"Error\":\"" + ex.Message.Replace("\"", "'") + "\"}";
+            }
+
+            result.Content = data;
+
+            return result;
+        }
     }
 }
