@@ -9,54 +9,92 @@ namespace MVCproject.Controllers
 
     public class DefaultController : BaseController
     {
-        [OmitDatabase()]
+
         public ActionResult Index()
         {
-            // There is no need to connect to the database at this point at all as only static content is being displayed
-            return View();
+            Default_Index model = new Default_Index();
+
+            model.styles = database.GetRecords<MapStyle>(); // load all available styles
+            model.maps = null; // TODO -> get the current user maps
+
+            return View(model);
         }
 
-        /// <summary>
-        /// returns a json string with all available users in the "users" table
-        /// </summary>
-        [Cache()]
-        public ContentResult getUsers()
+        // skelleton of the available methos that will be needed
+        [HttpPost]
+        public JsonResult CreateMap(string Name)
         {
-            // The result of this request will be cached and next time will be returned instead of being created again
-            // It can be convined with the client cache so it will also reduce the number of the calls to the server
-
-            ContentResult result = new ContentResult();
-            result.ContentType = "application/json";
-
-            // the database class offers two different ways to access the data into the database
-            // (comment the one you are not going to use)
-
-            // #1 write your own query
-            result.Content = database.GetDataTable("select * from users").ToJsonTable();
-
-            // #2 use an ITable object to query the database
-            result.Content = database.GetRecords<User>().ToJsonTable<User>();
-
-            return result;
+            return null;
         }
+
+        [HttpPost]
+        public JsonResult DeleteMap(int id)
+        {
+            return null;
+        }
+
+        [HttpPost]
+        public JsonResult UpdateMap(int id, string newName)
+        {
+            return null;
+        }
+
+        [HttpPost]
+        public JsonResult SetStyle(int id, string style, int zoom, string center) { return null; }
+
+
+
+
+        [HttpPost]
+        public JsonResult CreateDataset(string name)
+        {
+            return null;
+        }
+
+        [HttpPost]
+        public JsonResult UpdateDataset(int id, string newName)
+        {
+            return null;
+        }
+
+        [Cache()]
+        public ContentResult LoadDataset(int id)
+        {
+            return null;
+        }
+
+        [HttpPost]
+        public JsonResult DeleteDataset(int id)
+        {
+            return null;
+        }
+
+        [Cache()]
+        public ContentResult DownloadDataset(int id, string type)
+        {
+            return null;
+        }
+
+        [HttpPost]
+        public JsonResult SetValue(int id, string name, int value) { return null; }
+        // Alpha, Visible, Etc...
+
+        [HttpPost][Cache()]
+        public ContentResult GetPoint(int id, int ds) { return null; }
+
+        [HttpPost]
+        public JsonResult AddPoint(int ds, string point) { return null; }
+
+        [HttpPost]
+        public JsonResult DeletePoint(int ds, int id) { return null; }
+
+
+
 
         [OmitDatabase()]
-        public ContentResult test()
-        {
-            ContentResult result = new ContentResult();
-            result.ContentType = "application/json";
+        public ContentResult proxy(string url) { return null; }
 
-            //Converters c = new Converters(System.IO.File.ReadAllText(@"C:\Temp\CSV\20140306200349-293432.csv"));
-            //result.Content = c.GetDataTable<FromCSV>().ToJson();
-
-            //Converters c = new Converters(System.IO.File.ReadAllText(@"C:\Temp\eq.json"));
-            //result.Content = c.GetDataTable<FromJSON>().ToJsonTable();
-
-            //Converters c = new Converters(@"C:\Temp\temp.xlsx");
-            //result.Content = c.GetDataTable<FromExcel>().ToJsonTable();
-            
-            
-            return result;
-        }
+        [OmitDatabase()]
+        public ContentResult analyze(string url) { return null; }
     }
 }

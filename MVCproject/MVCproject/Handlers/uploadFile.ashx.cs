@@ -49,7 +49,7 @@ namespace MVCproject.Handlers
 
             // custom file name to get when it was uploaded, the original filename and the specified mimetype
             string tmp_file_name = DateTime.Now.ToString("yyyyMMddHHmmss.") + file.FileName + "." + mimeType;
-            
+
             file.SaveAs(tmp_folder + tmp_file_name);
 
             DataTable table;
@@ -67,7 +67,7 @@ namespace MVCproject.Handlers
                         );
                     break;
                 case "excel":
-                    table = Converters.GetDataTable <FromExcel>(tmp_folder + tmp_file_name);
+                    table = Converters.GetDataTable<FromExcel>(tmp_folder + tmp_file_name);
                     break;
                 default:
                     context.Response.Write("{\"Error\":\"specified mimetype is not supported\"}");
@@ -80,59 +80,24 @@ namespace MVCproject.Handlers
 
             Database db = new Database(ConfigurationManager.AppSettings["connectionString"].ToString());
 
-
-            // this is usually an intermediate step, so the user could never finish the process
-            // will check if it has any pending table from the last attempt and delete it before continue
-            object existing_table_name = db.ExecuteScalar("select tableName from datasets where name = @name", new KeyValuePair<string, object>("@name", userId + "temp-Name"));
-            if (existing_table_name != null && existing_table_name != DBNull.Value)
+            using (Dataset dataset = new Dataset(db))
             {
-                // remove the entry from the datasets table
-                db.ExecuteSQL("delete from `datasets` where name = @name", new KeyValuePair<string, object>("@name", userId + "temp-Name"));
+                int new_dataset_id = dataset.CreateFromTable(table, userId, tmp_file_name);
 
-                // drop the table asocciated to the dataset
-                db.ExecuteSQL("drop table `datasets`.`" + existing_table_name + "`");
-
-                // can use the same table name, no need to generate a new one
-                table.TableName = (string)existing_table_name;
-            }
-            else
-            {
-
-                // assign a new unique name to the table
-                // need to be sure there is no table with that name already in the database
-                bool nameExist = true;
-                while (nameExist)
+                if (new_dataset_id > 0)
                 {
-                    table.TableName = Helpers.GenerateUniqueName();
-                    nameExist = db.ExistTable(table.TableName, "datasets");
+                    context.Response.Write(
+                                            string.Format("{\"id\":{0},\"rows\":{1}}", new_dataset_id, table.Rows.Count)
+                                        );
+                }
+                else
+                {
+                    context.Response.Write("\"Error\"");
                 }
             }
-            
-            // all the data for the Datasets are located in its own schema "datasets" in the database, to keep 
-            // it separated from the application tables
-            if (db.InsertDataTable(table, "datasets"))
-            {
-                // once the table is created, add an entry to the "datasets" table
-                string sSQL = "insert into datasets (`name`,`createdon`,`access`,`filename`,`tmptable`,`rows`) values (@name,NOW(),'private',@filename,@tablename,@rows)";
-                db.ExecuteSQL(sSQL,
-                        new KeyValuePair<string, object>("@name", userId + "temp-Name"),
-                        new KeyValuePair<string, object>("@filename", tmp_file_name),
-                        new KeyValuePair<string, object>("@tablename", table.TableName),
-                        new KeyValuePair<string, object>("@rows", table.Rows.Count)
-                    );
 
-                // get the id of this dataset
-                sSQL = "select id from `datasets` where `name` = @name";
-                int new_dataset_id = (int)db.ExecuteScalar(sSQL, new KeyValuePair<string, object>("@name", userId + "temp-Name"));
+            db.Dispose();
 
-                context.Response.Write(
-                        string.Format("{\"id\":{0},\"rows\":{1}}", new_dataset_id, table.Rows.Count)
-                    );
-            }
-            else
-            {
-                context.Response.Write("\"Error\"");
-            }
         }
 
         public bool IsReusable
