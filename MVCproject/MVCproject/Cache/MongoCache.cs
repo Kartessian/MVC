@@ -73,6 +73,11 @@ namespace MVCproject
             collection_.Remove(Query<MongoCacheObject>.EQ(Q => Q.Id, Id));
         }
 
+        public void Remove(int DatasetId)
+        {
+            collection_.Remove(Query<MongoCacheObject>.EQ(Q => Q.DatasetId, DatasetId));
+        }
+
         public void Dispose()
         {
             // Mongo driver takes care of the connection, so won't really be needed to do anything here...
@@ -82,6 +87,8 @@ namespace MVCproject
     public class MongoCacheObject : ICacheObject
     {
         public string Id {get; set;}
+
+        public int DatasetId { get; set; }
 
         public object CachedObject { get; set; }
 

@@ -162,6 +162,7 @@
     <Compile Include="Database\ITable.cs" />
     <Compile Include="Database\MapStyle.cs" />
     <Compile Include="Database\User.cs" />
+    <Compile Include="Database\UserMaps.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

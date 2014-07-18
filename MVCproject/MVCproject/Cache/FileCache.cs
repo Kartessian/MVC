@@ -94,6 +94,11 @@ namespace MVCproject
             }
         }
 
+        public void Remove(int DatasetId)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Dispose()
         {
             //so far there is no need to dispose anything...
@@ -129,6 +134,8 @@ namespace MVCproject
     public class FileCacheObject : ICacheObject
     {
         public string Id { get; set; }
+
+        public int DatasetId { get; set; }
 
         public object CachedObject { get; set; }
 

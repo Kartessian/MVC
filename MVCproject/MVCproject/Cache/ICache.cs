@@ -12,6 +12,8 @@ namespace MVCproject
 
         string Id { get; set; }
 
+        int DatasetId { get; set; }
+
         object CachedObject {get; set;}
 
         DateTime? Expiration {get; set;}
@@ -30,6 +32,7 @@ namespace MVCproject
 
         void Remove(string Id);
 
+        void Remove(int DatasetId);
 
     }
 }

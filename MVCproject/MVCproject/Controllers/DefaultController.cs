@@ -19,6 +19,11 @@ namespace MVCproject.Controllers
             model.styles = database.GetRecords<MapStyle>(); // load all available styles
             model.maps = null; // TODO -> get the current user maps
 
+
+            // it will store the resume in the session as will be access later with other requests
+            // this will also help to validate requests from the user
+            Session["user-maps"] = model.maps;
+
             return View(model);
         }
 
@@ -53,42 +58,53 @@ namespace MVCproject.Controllers
             return null;
         }
 
-        [HttpPost]
-        public JsonResult UpdateDataset(int id, string newName)
+        [HttpPost][VerifyOwner]
+        public JsonResult UpdateDataset(int ds, string newName)
         {
             return null;
         }
 
-        [Cache()]
-        public ContentResult LoadDataset(int id)
+        [HttpPost][VerifyOwner]
+        public JsonResult DeleteDataset(int ds)
         {
             return null;
         }
 
-        [HttpPost]
-        public JsonResult DeleteDataset(int id)
+        [Cache("ds")]
+        public ContentResult GetDataset(int ds)
         {
             return null;
         }
 
-        [Cache()]
+        [Cache("ds")]
         public ContentResult DownloadDataset(int id, string type)
         {
             return null;
         }
 
-        [HttpPost]
-        public JsonResult SetValue(int id, string name, int value) { return null; }
+        [Cache("ds")]
+        public ContentResult GetPoints(int ds)
+        {
+            return null;
+        }
+
+        [HttpPost][VerifyOwner]
+        public JsonResult SetValue(int ds, string name, int value) { return null; }
         // Alpha, Visible, Etc...
 
-        [HttpPost][Cache()]
-        public ContentResult GetPoint(int id, int ds) { return null; }
+
+        [HttpPost]
+        public ContentResult GetPoint(int ds, int point) { return null; }
 
         [HttpPost]
         public JsonResult AddPoint(int ds, string point) { return null; }
 
         [HttpPost]
-        public JsonResult DeletePoint(int ds, int id) { return null; }
+        public JsonResult DeletePoint(int ds, int point) { return null; }
+
+
+
+
 
 
         [ValidateInput(false)]

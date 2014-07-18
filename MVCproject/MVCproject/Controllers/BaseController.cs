@@ -114,15 +114,22 @@ namespace MVCproject.Controllers
                 //working only for now for ContentResult
                 if (filterContext.Result is ContentResult)
                 {
-
                     DateTime duration = DateTime.MaxValue;
                     
+                    MongoCacheObject cacheObject = new MongoCacheObject(cache_ID, ((System.Web.Mvc.ContentResult)(filterContext.Result)).Content, duration);
+
                     if (cache_attribute.seconds > 0)
                     {
                         duration = DateTime.Now.AddSeconds(cache_attribute.seconds);
                     }
 
-                    cache.Add(new MongoCacheObject(cache_ID, ((System.Web.Mvc.ContentResult)(filterContext.Result)).Content, duration));
+                    // if there is any parameter that contains the dataset id
+                    if (!string.IsNullOrEmpty(cache_attribute.datasetParameter))
+                    {
+                        cacheObject.DatasetId = int.Parse(Request[cache_attribute.datasetParameter].ToString());
+                    }
+
+                    cache.Add(cacheObject);
                 }
             }
 
