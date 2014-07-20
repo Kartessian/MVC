@@ -8,11 +8,28 @@ namespace MVCproject.Controllers
 {
     public class AccountController : BaseController
     {
+        const string imHere_Register = "imHere";
+        const string imHere_Login = "imHereToLog";
+
+        [HttpGet]
+        [OmitDatabase]
+        public ActionResult Login()
+        {
+            Session[imHere_Login] = true;
+            return View();
+        }
+
+        [HttpPost]
         [ValidateInput(false)]
         public ActionResult Login(string username, string password, string remember)
         {
 
-            if (!String.IsNullOrEmpty(username) || !String.IsNullOrEmpty(password))
+            if (Session[imHere_Register] == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            if (!String.IsNullOrEmpty(username) && !String.IsNullOrEmpty(password))
             {
                 using (Account account = new Account(database))
                 {
@@ -21,6 +38,9 @@ namespace MVCproject.Controllers
                     {
                         Session["user"] = user;
                         account.SetLastVisit(user.id, RequestIP());
+
+                        Session.Remove(imHere_Login);
+
                         return RedirectToAction("Index", "Default");
                     }
                     else
@@ -43,76 +63,83 @@ namespace MVCproject.Controllers
             return View("Login");
         }
 
+        [HttpGet]
+        [OmitDatabase]
+        public ActionResult Resgiter()
+        {
+            // The Session variable imHere is used to prevent a post without first come to the register page
+            // that should help prevent for automatic posting calling directly the register action
+            Session[imHere_Register] = true;
+            return View();
+        }
+
         [ValidateInput(false)]
         public ActionResult Resgiter(string email, string[] password, string name)
         {
             ViewBag.email = email;
             ViewBag.name = name;
 
+            if (Session[imHere_Register] == null)
+            {
+                return RedirectToAction("Register");
+            }
+
             if (!string.IsNullOrEmpty(email) && password != null && !string.IsNullOrEmpty(name))
             {
-                if (Session["imHere"] == null)
-                {
-                    return RedirectToAction("Register");
-                }
-                else
-                {
 
 
-                    if (password.Length == 2)
-                    {
-                        if (password[0] != password[1])
-                        {
-                            ViewBag.error = "The passwords entered do not match!";
-                            return View();
-                        }
-                    }
-                    else
+                if (password.Length == 2)
+                {
+                    if (password[0] != password[1])
                     {
                         ViewBag.error = "The passwords entered do not match!";
                         return View();
                     }
+                }
+                else
+                {
+                    ViewBag.error = "The passwords entered do not match!";
+                    return View();
+                }
 
-                    using (Account account = new Account(database))
+                using (Account account = new Account(database))
+                {
+
+                    try
                     {
 
-                        try
+                        database.BeginTransaction();
+
+                        if (account.EmailExist(email))
                         {
-
-                            database.BeginTransaction();
-
-                            if (account.EmailExist(email))
-                            {
-                                ViewBag.error = "The email already exist. Did you forget your password?";
-                                return View();
-                            }
-
-                            account.CreateUser(email, name, password[0], RequestIP());
-
-                            string sbody = "<p>Thanks for signing up!</p>" +
-                                "<p>Your account is ready now, and you can log in and start creating awesome maps.<p>" +
-                                "<p>Your login details are:</p>" +
-                                "<p>Email: " + email + "</p>" +
-                                "<p>Password: " + password + "</p><br/><br/><p>Contact us at info@kartessian.com if you have any question.</p>" +
-                                "<p>Kind Regards,<br/>Kartessian</p>";
-
-                            Helpers.SendEmail(email, "Welcome to Kartessian, " + name + "!", sbody);
-
-                            ViewBag.error = "Your account have been created. We've sent you an email with your login details.";
-                            database.Commit();
+                            ViewBag.error = "The email already exist. Did you forget your password?";
+                            return View();
                         }
-                        catch
-                        {
-                            ViewBag.error = "An error occurred creating your account. Check your details.";
-                            database.RollBack();
-                        }
+
+                        account.CreateUser(email, name, password[0], RequestIP());
+
+                        string sbody = "<p>Thanks for signing up!</p>" +
+                            "<p>Your account is ready now, and you can log in and start creating awesome maps.<p>" +
+                            "<p>Your login details are:</p>" +
+                            "<p>Email: " + email + "</p>" +
+                            "<p>Password: " + password + "</p><br/><br/><p>Contact us at info@kartessian.com if you have any question.</p>" +
+                            "<p>Kind Regards,<br/>Kartessian</p>";
+
+                        Helpers.SendEmail(email, "Welcome to Kartessian, " + name + "!", sbody);
+
+                        ViewBag.error = "Your account have been created. We've sent you an email with your login details.";
+                        database.Commit();
+
+                        Session.Remove(imHere_Register);
                     }
-
+                    catch
+                    {
+                        ViewBag.error = "An error occurred creating your account. Check your details.";
+                        database.RollBack();
+                    }
                 }
-            }
-            else
-            {
-                Session["imHere"] = true;
+
+
             }
 
             return View();

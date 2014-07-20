@@ -1,0 +1,46 @@
+﻿@{
+    ViewBag.Title = "Kartessian Register";
+    Layout = "~/Views/Account/_Layout.cshtml";
+}
+<div class="tbl">
+    <div class="cll">
+        <div class="lgn-reg">
+            <div style="float: left; padding: 5px 0;">
+                <a href="/">
+                    <img src="/images/kartessian.png" alt="Kartessian" /></a><small class="beta">BETA</small>
+            </div>
+            <div class="clear"></div>
+            <div style="height: 0; border-bottom: 1px solid #ddd; border-top: 1px solid #eee; margin: 8px 0 12px 0;"></div>
+            @if (ViewBag.error != null)
+            {
+                <div class="lgnerr">
+                    @ViewBag.error
+                </div>
+            }
+            <span style="font-size: 13px;">Welcome,<br />
+                Register is simple and free. Fill the form to start creating your maps now!</span>
+            <div class="lgnbox">
+                <form action="/DoRegister">
+                    <span>Name</span>
+                    <input type="text" class="lgnipt" placeholder="your name" name="name" value="@ViewBag.name" />
+                    <br />
+                    <br />
+                    <span>Email</span>
+                    <input type="text" class="lgnipt" placeholder="email address" name="email" value="@ViewBag.email" />
+                    <br />
+                    <br />
+                    <span>Password</span>
+                    <input type="password" class="lgnipt" placeholder="password" name="password" value="" /><br />
+                    <span>Confirm Password</span>
+                    <input type="password" class="lgnipt" placeholder="confirm password" name="password" value="" />
+                    <div>
+                        <button type="submit" class="bnGreen" style="width: 90px; float: right;">Register</button>
+                        <div class="clear"></div>
+                    </div>
+                </form>
+            </div>
+            <a href="/Login">Login</a> | <a href="/PasswordLost">Lost your password?</a>
+        </div>
+    </div>
+</div>
+<script>$(function () { $("form").attr("method", "post").attr("action", ""); })</script>
