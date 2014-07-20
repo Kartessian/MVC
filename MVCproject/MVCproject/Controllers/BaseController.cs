@@ -136,6 +136,33 @@ namespace MVCproject.Controllers
             base.OnActionExecuted(filterContext);
         }
 
+        protected override void OnException(ExceptionContext filterContext)
+        {
+
+            // check the type of action to ensure we return the right value
+
+            if (filterContext.Result is JsonResult || filterContext.Result is ContentResult)
+            {
+
+                var result = new ContentResult();
+                result.ContentType = "application/json";
+                result.Content = "\"Exception\"";
+
+                filterContext.Result = result;
+
+            }
+            else
+            {
+
+                var result = new ViewResult() { ViewName = "~/Views/Shared/Error.cshtml" };
+
+                filterContext.Result = result;
+            }
+
+            filterContext.ExceptionHandled = true;
+
+        }
+
         /// <summary>
         /// Returns the IP address used by the client (or proxy)
         /// </summary>

@@ -24,6 +24,14 @@ namespace MVCproject
                     ).FirstOrDefault();
         }
 
+        public User GetUser(string email)
+        {
+
+            return database_.GetRecords<User>(
+                            new KeyValuePair<string, object>("@email", email)
+                    ).FirstOrDefault();
+        }
+
         public void SetLastVisit(int userId, string ip)
         {
             database_.ExecuteSQL("update users set lastVisit = NOW(), lastVisitIp = @ip where id = @id",

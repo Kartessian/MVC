@@ -10,6 +10,7 @@ namespace MVCproject.Controllers
     {
         const string imHere_Register = "imHere";
         const string imHere_Login = "imHereToLog";
+        const string imHere_Password = "imHerePwd";
 
         [HttpGet]
         [OmitDatabase]
@@ -36,10 +37,11 @@ namespace MVCproject.Controllers
                     var user = account.GetUser(username, password);
                     if (user != null)
                     {
+                        // be sure the session is empty before continuing
+                        Session.Clear();
+                        
                         Session["user"] = user;
                         account.SetLastVisit(user.id, RequestIP());
-
-                        Session.Remove(imHere_Login);
 
                         return RedirectToAction("Index", "Default");
                     }
@@ -140,6 +142,59 @@ namespace MVCproject.Controllers
                 }
 
 
+            }
+
+            return View();
+        }
+
+        [HttpGet]
+        [OmitDatabase]
+        public ActionResult PasswordLost()
+        {
+            // The Session variable imHere is used to prevent a post without first come to the register page
+            // that should help prevent for automatic posting calling directly the register action
+            Session[imHere_Password] = true;
+            return View();
+        }
+
+        public ActionResult PasswordLost(string email)
+        {
+
+            if (Session[imHere_Password] == null)
+            {
+                return RedirectToAction("PasswordLost");
+            }
+
+            if (!string.IsNullOrEmpty(email))
+            {
+
+                using (Account account = new Account(database))
+                {
+
+                    if (account.EmailExist(email))
+                    {
+
+                        User user = account.GetUser(email);
+
+                        if (user != null)
+                        {
+                            string sbody = "<p>You are receiving this message because you asked to remember your password.</p>" +
+                            "<p>Please use the information below to log into your kartessian account where you will be able to change your password.</p>" +
+                            "<p>E-mail: " + email + "</p><p>Password: " + user.password.ToString() + "</p>";
+
+                            Helpers.SendEmail(email, "kartessian password recovery", sbody);
+
+                            ViewBag.result = "OK";
+                            Session.Remove(imHere_Password);
+                        }
+                    }
+                    else
+                    {
+
+                        ViewBag.result = "NO";
+
+                    }
+                }
             }
 
             return View();
