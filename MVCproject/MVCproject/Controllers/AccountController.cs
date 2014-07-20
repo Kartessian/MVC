@@ -24,7 +24,7 @@ namespace MVCproject.Controllers
         public ActionResult Login(string username, string password, string remember)
         {
 
-            if (Session[imHere_Register] == null)
+            if (Session[imHere_Login] == null)
             {
                 return RedirectToAction("Login");
             }
@@ -65,7 +65,7 @@ namespace MVCproject.Controllers
 
         [HttpGet]
         [OmitDatabase]
-        public ActionResult Resgiter()
+        public ActionResult Register()
         {
             // The Session variable imHere is used to prevent a post without first come to the register page
             // that should help prevent for automatic posting calling directly the register action
@@ -74,7 +74,7 @@ namespace MVCproject.Controllers
         }
 
         [ValidateInput(false)]
-        public ActionResult Resgiter(string email, string[] password, string name)
+        public ActionResult Register(string email, string[] password, string name)
         {
             ViewBag.email = email;
             ViewBag.name = name;
