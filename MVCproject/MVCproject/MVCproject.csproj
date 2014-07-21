@@ -154,6 +154,7 @@
     <Compile Include="Classes\Extensions.cs" />
     <Compile Include="Classes\Converters\IConverter.cs" />
     <Compile Include="Classes\Helpers.cs" />
+    <Compile Include="Classes\Maps.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\DefaultController.cs" />
     <Compile Include="Controllers\AccountController.cs" />

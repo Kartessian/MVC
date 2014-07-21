@@ -64,8 +64,10 @@ namespace MVCproject
 
                 User user = (User)httpContext.Session["user"];
 
-                //get the datasetId from the parameters
+                // get the datasetId from the parameters
                 string datasetId = httpContext.Request["ds"];
+                // get the mapId from the parameters
+                string mapId = httpContext.Request["id"];
 
                 List<UserMaps> userMaps = (List<UserMaps>)httpContext.Session["user-maps"];
 

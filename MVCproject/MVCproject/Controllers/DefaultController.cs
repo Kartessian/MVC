@@ -31,22 +31,44 @@ namespace MVCproject.Controllers
         [HttpPost]
         public JsonResult CreateMap(string Name)
         {
-            return null;
+            int mapId;
+            using (Maps maps = new Maps(database))
+            {
+                mapId = maps.Create(Name, string.Empty, user.id);
+            }
+
+            JsonResult result = new JsonResult();
+            result.Data = mapId;
+            return result;
         }
 
-        [HttpPost]
+        [HttpPost][VerifyOwner]
         public JsonResult DeleteMap(int id)
         {
-            return null;
+            using (Maps maps = new Maps(database))
+            {
+                maps.Delete(id);
+            }
+
+            JsonResult result = new JsonResult();
+            result.Data = "Ok";
+            return result;
         }
 
-        [HttpPost]
+        [HttpPost][VerifyOwner]
         public JsonResult UpdateMap(int id, string newName)
         {
-            return null;
+            using (Maps maps = new Maps(database))
+            {
+                maps.Update(id, newName, string.Empty);
+            }
+
+            JsonResult result = new JsonResult();
+            result.Data = "Ok";
+            return result;
         }
 
-        [HttpPost]
+        [HttpPost][VerifyOwner]
         public JsonResult SetStyle(int id, string style, int zoom, string center) { return null; }
 
 
