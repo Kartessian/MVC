@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
@@ -17,8 +18,8 @@ namespace MVCproject.Controllers
             Default_Index model = new Default_Index();
 
             model.styles = database.GetRecords<MapStyle>(); // load all available styles
-            model.maps = null; // TODO -> get the current user maps
-
+            model.maps = database.GetRecords<UserMaps>(new KeyValuePair<string, object>("@userId", user.id)); // get the current user maps
+            model.datasets = database.GetRecords<MapDataset>(new KeyValuePair<string, object>("@userId", user.id)); // user datasets
 
             // it will store the resume in the session as will be access later with other requests
             // this will also help to validate requests from the user
@@ -89,7 +90,14 @@ namespace MVCproject.Controllers
         [HttpPost][VerifyOwner]
         public JsonResult DeleteDataset(int ds)
         {
-            return null;
+            using (Dataset dataset = new Dataset(database))
+            {
+                dataset.Delete(ds);
+            }
+
+            JsonResult result = new JsonResult();
+            result.Data = "Ok";
+            return result;
         }
 
         [Cache("ds")]
@@ -98,16 +106,44 @@ namespace MVCproject.Controllers
             return null;
         }
 
-        [Cache("ds")]
-        public ContentResult DownloadDataset(int id, string type)
+        // planning to cache File Results, combining file cache and mongodb cache, so depending on the 
+        // Response it will be using one of the other...
+        public FileContentResult DownloadDataset(int ds, string type)
         {
-            return null;
+            // need to improve the way the data is stored in session, using the Model for the index/default view 
+            // is not the best way... thought it works.
+            MapDataset dataset = ((Default_Index)Session["user-maps"]).datasets.First(D => D.id == ds);
+
+            FileContentResult result = null;
+            switch (type.ToLower())
+            {
+                case "csv":
+                    result = new FileContentResult(
+                            Encoding.UTF8.GetBytes(database.GetDataTable("select * from datasets.`" + dataset.tmpTable + "`").ToCSV())
+                            , "text/csv");
+                    result.FileDownloadName = dataset.name + ".csv";
+                    break;
+
+                case "json":
+                    result = new FileContentResult(
+                            Encoding.UTF8.GetBytes(database.GetDataTable("select * from datasets.`" + dataset.tmpTable + "`").ToGEOJson(dataset.latColumn, dataset.lngColumn))
+                            , "application/vnd.geo+json");
+                    result.FileDownloadName = dataset.name + ".json";
+                    break;
+            }
+
+
+            return result;
         }
 
         [Cache("ds")]
         public ContentResult GetPoints(int ds)
         {
-            return null;
+            ContentResult result = new ContentResult();
+            result.ContentType = "application/json";
+
+
+            return result;
         }
 
         [HttpPost][VerifyOwner]
@@ -116,7 +152,21 @@ namespace MVCproject.Controllers
 
 
         [HttpPost]
-        public ContentResult GetPoint(int ds, int point) { return null; }
+        public ContentResult GetPoint(int ds, int point) {
+
+            MapDataset mapDataset = ((Default_Index)Session["user-maps"]).datasets.First(D => D.id == ds);
+
+            ContentResult result = new ContentResult();
+            result.ContentType = "application/json";
+
+            using (Dataset dataset = new Dataset(database)) {
+
+                result.Content = dataset.GetPoint(mapDataset.tmpTable, point).ToJson();
+            
+            }
+
+            return result;
+        }
 
         [HttpPost]
         public JsonResult AddPoint(int ds, string point) { return null; }

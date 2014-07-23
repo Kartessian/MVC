@@ -70,6 +70,11 @@ namespace MVCproject
             return 0;
         }
 
+        public DataTable GetPoint(string tmpTable, int point)
+        {
+            return database_.GetDataTable("select * from `datasets`.`" + tmpTable + "`", new KeyValuePair<string, object>("@id", point));
+        }
+
         public void Delete(int DatasetId)
         {
             object existing_table_name = database_.ExecuteScalar("select tableName from datasets where id = @id",

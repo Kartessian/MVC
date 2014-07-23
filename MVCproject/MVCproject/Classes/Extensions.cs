@@ -128,5 +128,86 @@ namespace MVCproject
             return json;
         }
 
+        /// <summary>
+        /// Serialize a DataTable into a GeoJSON string
+        /// </summary>
+        /// <param name="dt">DataTable to serialize</param>
+        /// <param name="latColumn">column for latitude</param>
+        /// <param name="lngColumn">column for longitude</param>
+        public static string ToGEOJson(this DataTable dt, string latColumn, string lngColumn)
+        {
+            StringBuilder result = new StringBuilder();
+            StringBuilder line;
+
+            foreach (DataRow r in dt.Rows)
+            {
+                line = new StringBuilder();
+
+
+                foreach (DataColumn col in dt.Columns)
+                {
+                    if (col.ColumnName != latColumn && col.ColumnName != lngColumn)
+                    {
+                        string cValue = r[col].ToString();
+                        line.Append(",\"" + col.ColumnName + "\":\"" + cValue.Replace("\"", "\\\"") + "\"");
+                    }
+
+                }
+
+                result.Append(
+                    ",{\"type\":\"Feature\",\"geometry\": {\"type\":\"Point\", \"coordinates\": [" + r[lngColumn].ToString() + "," + r[latColumn].ToString() + "]},\"properties\":{" +
+                    line.ToString().Substring(1) + "}}");
+
+            }
+
+            string geojson = "{\"type\": \"FeatureCollection\",\"features\": [" +
+                result.ToString().Substring(1) + "]}";
+
+            return geojson;
+        }
+
+        /// <summary>
+        /// Serializes a DataTable to CSV
+        /// </summary>
+        public static string ToCSV(this DataTable dt)
+        {
+            StringBuilder result = new StringBuilder();
+            StringBuilder line = new StringBuilder();
+
+            foreach (DataColumn col in dt.Columns)
+            {
+
+                line.Append("," + col.ColumnName);
+            }
+
+            result.AppendLine(line.ToString().Substring(1));
+
+            foreach (DataRow r in dt.Rows)
+            {
+                line = new StringBuilder();
+
+                foreach (DataColumn col in dt.Columns)
+                {
+
+                    string cValue = r[col].ToString();
+
+                    if (cValue.Contains(","))
+                    {
+                        line.Append(",\"" + cValue + "\"");
+                    }
+                    else
+                    {
+                        line.Append("," + cValue);
+                    }
+
+
+                }
+
+                result.AppendLine(line.ToString().Substring(1));
+
+            }
+
+            return result.ToString();
+        }
     }
 }

@@ -69,11 +69,27 @@ namespace MVCproject
                 // get the mapId from the parameters
                 string mapId = httpContext.Request["id"];
 
-                List<UserMaps> userMaps = (List<UserMaps>)httpContext.Session["user-maps"];
-
                 // the idea is try to find the datasetIdfrom the datasets available for the user
-                // but will need to load the datasets properly first
+                // that were stored in session using the Default_Index model -- open to improvements
+                Default_Index userMaps = (Default_Index)httpContext.Session["user-maps"];
 
+                if (!string.IsNullOrEmpty(mapId))
+                {
+                    int map = int.Parse(mapId);
+
+                    return userMaps.maps.Any(M => M.id == map);
+                }
+
+                if (!string.IsNullOrEmpty(datasetId))
+                {
+
+                    int ds = int.Parse(datasetId);
+
+                    return userMaps.datasets.Any(D => D.id == ds);
+                }
+
+
+                return false;
             }
 
             return base.AuthorizeCore(httpContext);

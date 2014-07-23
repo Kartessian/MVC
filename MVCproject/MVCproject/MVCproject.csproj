@@ -161,6 +161,7 @@
     <Compile Include="Controllers\EmbedController.cs" />
     <Compile Include="Database\Database.cs" />
     <Compile Include="Database\ITable.cs" />
+    <Compile Include="Database\MapDataset.cs" />
     <Compile Include="Database\MapStyle.cs" />
     <Compile Include="Database\User.cs" />
     <Compile Include="Database\UserMaps.cs" />

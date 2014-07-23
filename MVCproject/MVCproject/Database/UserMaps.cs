@@ -14,8 +14,13 @@ namespace MVCproject
             get { return "Maps"; }
         }
 
+        [RelatedField]
+        public List<MapDataset> Datasets { get; set; }
+
         [PrimaryKeyDefinition(true, true)]
         public int id { get; set; }
+
+        public string name { get; set; }
 
         public UserMaps() { }
 
