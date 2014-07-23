@@ -150,13 +150,15 @@ namespace MVCproject
                 }
             }
 
-            foreach (DataRow reader in dt.Rows)
+            foreach (DataRow row in dt.Rows)
             {
+                newObject = new T();
+
                 foreach (string propName in Properties)
                 {
-                    if (((!object.ReferenceEquals(reader[propName], DBNull.Value))))
+                    if (((!object.ReferenceEquals(row[propName], DBNull.Value))))
                     {
-                        newObject.GetType().GetProperty(propName).SetValue(newObject, reader[propName], null);
+                        newObject.GetType().GetProperty(propName).SetValue(newObject, row[propName], null);
                     }
                 }
 

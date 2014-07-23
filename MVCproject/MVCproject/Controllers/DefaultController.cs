@@ -17,13 +17,14 @@ namespace MVCproject.Controllers
         {
             Default_Index model = new Default_Index();
 
-            model.styles = database.GetRecords<MapStyle>(); // load all available styles
-            model.maps = database.GetRecords<UserMaps>(new KeyValuePair<string, object>("@userId", user.id)); // get the current user maps
-            model.datasets = database.GetRecords<MapDataset>(new KeyValuePair<string, object>("@userId", user.id)); // user datasets
+            //model.styles = database.GetRecords<MapStyle>(); // load all available styles
+            model.maps = database.GetRecords<UserMaps>(); // get the current user maps
+            model.datasets = database.GetRecords<MapDataset>(); // user datasets
 
             // it will store the resume in the session as will be access later with other requests
             // this will also help to validate requests from the user
             Session["user-maps"] = model.maps;
+            Session["user-datasets"] = model.datasets;
 
             return View(model);
         }
@@ -101,34 +102,40 @@ namespace MVCproject.Controllers
         }
 
         [Cache("ds")]
-        public ContentResult GetDataset(int ds)
+        public JsonResult GetDataset(int ds)
         {
-            return null;
+            MapDataset mapDataset = ((List<MapDataset>)Session["user-datasets"]).First(D => D.id == ds);
+
+            JsonResult result = new JsonResult();
+            result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            result.Data = mapDataset;
+
+            return result;
         }
 
         // planning to cache File Results, combining file cache and mongodb cache, so depending on the 
         // Response it will be using one of the other...
         public FileContentResult DownloadDataset(int ds, string type)
         {
-            // need to improve the way the data is stored in session, using the Model for the index/default view 
+            // need to improve the way the data is stored in session
             // is not the best way... thought it works.
-            MapDataset dataset = ((Default_Index)Session["user-maps"]).datasets.First(D => D.id == ds);
+            MapDataset mapDataset = ((List<MapDataset>)Session["user-datasets"]).First(D => D.id == ds);
 
             FileContentResult result = null;
             switch (type.ToLower())
             {
                 case "csv":
                     result = new FileContentResult(
-                            Encoding.UTF8.GetBytes(database.GetDataTable("select * from datasets.`" + dataset.tmpTable + "`").ToCSV())
+                            Encoding.UTF8.GetBytes(database.GetDataTable("select * from datasets.`" + mapDataset.tmpTable + "`").ToCSV())
                             , "text/csv");
-                    result.FileDownloadName = dataset.name + ".csv";
+                    result.FileDownloadName = mapDataset.name + ".csv";
                     break;
 
                 case "json":
                     result = new FileContentResult(
-                            Encoding.UTF8.GetBytes(database.GetDataTable("select * from datasets.`" + dataset.tmpTable + "`").ToGEOJson(dataset.latColumn, dataset.lngColumn))
+                            Encoding.UTF8.GetBytes(database.GetDataTable("select * from datasets.`" + mapDataset.tmpTable + "`").ToGEOJson(mapDataset.latColumn, mapDataset.lngColumn))
                             , "application/vnd.geo+json");
-                    result.FileDownloadName = dataset.name + ".json";
+                    result.FileDownloadName = mapDataset.name + ".json";
                     break;
             }
 
@@ -154,7 +161,7 @@ namespace MVCproject.Controllers
         [HttpPost]
         public ContentResult GetPoint(int ds, int point) {
 
-            MapDataset mapDataset = ((Default_Index)Session["user-maps"]).datasets.First(D => D.id == ds);
+            MapDataset mapDataset = ((List<MapDataset>)Session["user-datasets"]).First(D => D.id == ds);
 
             ContentResult result = new ContentResult();
             result.ContentType = "application/json";

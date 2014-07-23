@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -111,12 +112,26 @@ namespace MVCproject.Controllers
             // so next time is being accesed, it will return the file directly
             if (cache != null)
             {
-                //working only for now for ContentResult
-                if (filterContext.Result is ContentResult)
+                // so far working only for ContentResult and JsonResult
+                if (filterContext.Result is ContentResult || filterContext.Result is JsonResult)
                 {
                     DateTime duration = DateTime.MaxValue;
-                    
-                    MongoCacheObject cacheObject = new MongoCacheObject(cache_ID, ((System.Web.Mvc.ContentResult)(filterContext.Result)).Content, duration);
+                    string json_response;
+
+                    if (filterContext.Result is ContentResult)
+                    {
+                        // use the content of the ContentResult
+                        json_response = ((System.Web.Mvc.ContentResult)(filterContext.Result)).Content;
+                    }
+                    else
+                    {
+                        // get the json string from the response
+                        // TODO -> test pending
+                        // (this method should work for all the Response types, but not as efficient as the previous one)
+                        json_response = new StreamReader(filterContext.HttpContext.Response.Filter).ReadToEnd();
+                    }
+
+                    MongoCacheObject cacheObject = new MongoCacheObject(cache_ID, json_response, duration);
 
                     if (cache_attribute.seconds > 0)
                     {

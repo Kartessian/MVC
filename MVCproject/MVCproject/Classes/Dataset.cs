@@ -72,7 +72,7 @@ namespace MVCproject
 
         public DataTable GetPoint(string tmpTable, int point)
         {
-            return database_.GetDataTable("select * from `datasets`.`" + tmpTable + "`", new KeyValuePair<string, object>("@id", point));
+            return database_.GetDataTable("select * from `datasets`.`" + tmpTable + "` where id = @id", new KeyValuePair<string, object>("@id", point));
         }
 
         public void Delete(int DatasetId)

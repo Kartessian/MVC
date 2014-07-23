@@ -71,21 +71,22 @@ namespace MVCproject
 
                 // the idea is try to find the datasetIdfrom the datasets available for the user
                 // that were stored in session using the Default_Index model -- open to improvements
-                Default_Index userMaps = (Default_Index)httpContext.Session["user-maps"];
 
                 if (!string.IsNullOrEmpty(mapId))
                 {
+                    List<UserMaps> userMaps = (List<UserMaps>)httpContext.Session["user-maps"];
                     int map = int.Parse(mapId);
 
-                    return userMaps.maps.Any(M => M.id == map);
+                    return userMaps.Any(M => M.id == map);
                 }
 
                 if (!string.IsNullOrEmpty(datasetId))
                 {
 
+                    List<MapDataset> userDs = (List<MapDataset>)httpContext.Session["user-datasets"];
                     int ds = int.Parse(datasetId);
 
-                    return userMaps.datasets.Any(D => D.id == ds);
+                    return userDs.Any(D => D.id == ds);
                 }
 
 
