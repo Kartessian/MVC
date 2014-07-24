@@ -11,20 +11,63 @@ namespace MVCproject.Controllers
 
     public class DefaultController : BaseController
     {
-        
+        const string user_maps = "user-maps";
+        const string user_datasets = "user-datasets";
+
+
+        private void SetUserSession(List<UserMaps> userMaps, List<MapDataset> mapDatasets)
+        {
+            Session[user_maps] = userMaps;
+            Session[user_datasets] = mapDatasets;
+        }
+
+        private List<UserMaps> UserMaps()
+        {
+            if (Session[user_maps] != null)
+            {
+                return ((List<UserMaps>)Session[user_maps]);
+            }
+            else
+            {
+                return new List<UserMaps>();
+            }
+        }
+
+        private List<MapDataset> UserDatasets()
+        {
+            if (Session[user_datasets] != null)
+            {
+                return ((List<MapDataset>)Session[user_datasets]);
+            }
+            else
+            {
+                return new List<MapDataset>();
+            }
+        }
+
+
         [HttpGet]
         public ActionResult Index()
         {
             Default_Index model = new Default_Index();
 
             //model.styles = database.GetRecords<MapStyle>(); // load all available styles
-            model.maps = database.GetRecords<UserMaps>(); // get the current user maps
-            model.datasets = database.GetRecords<MapDataset>(); // user datasets
+            
+            // get the current user maps
+            using (Maps maps = new Maps(database))
+            {
+                model.maps = maps.UserMaps(user.id);
+            }
+
+            // current user available datasets only
+            using (Dataset dataset = new Dataset(database))
+            {
+                model.datasets = dataset.UserActiveList(user.id);
+            }
 
             // it will store the resume in the session as will be access later with other requests
             // this will also help to validate requests from the user
-            Session["user-maps"] = model.maps;
-            Session["user-datasets"] = model.datasets;
+            SetUserSession(model.maps, model.datasets);
 
             return View(model);
         }
@@ -104,11 +147,9 @@ namespace MVCproject.Controllers
         [Cache("ds")]
         public JsonResult GetDataset(int ds)
         {
-            MapDataset mapDataset = ((List<MapDataset>)Session["user-datasets"]).First(D => D.id == ds);
-
             JsonResult result = new JsonResult();
             result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
-            result.Data = mapDataset;
+            result.Data = UserDatasets().FirstOrDefault(D => D.id == ds);
 
             return result;
         }
@@ -117,30 +158,36 @@ namespace MVCproject.Controllers
         // Response it will be using one of the other...
         public FileContentResult DownloadDataset(int ds, string type)
         {
-            // need to improve the way the data is stored in session
-            // is not the best way... thought it works.
-            MapDataset mapDataset = ((List<MapDataset>)Session["user-datasets"]).First(D => D.id == ds);
 
-            FileContentResult result = null;
-            switch (type.ToLower())
+            MapDataset mapDataset = UserDatasets().FirstOrDefault(D => D.id == ds);
+
+            if (mapDataset != null)
             {
-                case "csv":
-                    result = new FileContentResult(
-                            Encoding.UTF8.GetBytes(database.GetDataTable("select * from datasets.`" + mapDataset.tmpTable + "`").ToCSV())
-                            , "text/csv");
-                    result.FileDownloadName = mapDataset.name + ".csv";
-                    break;
 
-                case "json":
-                    result = new FileContentResult(
-                            Encoding.UTF8.GetBytes(database.GetDataTable("select * from datasets.`" + mapDataset.tmpTable + "`").ToGEOJson(mapDataset.latColumn, mapDataset.lngColumn))
-                            , "application/vnd.geo+json");
-                    result.FileDownloadName = mapDataset.name + ".json";
-                    break;
+                FileContentResult result = null;
+                switch (type.ToLower())
+                {
+                    case "csv":
+                        result = new FileContentResult(
+                                Encoding.UTF8.GetBytes(database.GetDataTable("select * from datasets.`" + mapDataset.tmpTable + "`").ToCSV())
+                                , "text/csv");
+                        result.FileDownloadName = mapDataset.name + ".csv";
+                        break;
+
+                    case "json":
+                        result = new FileContentResult(
+                                Encoding.UTF8.GetBytes(database.GetDataTable("select * from datasets.`" + mapDataset.tmpTable + "`").ToGEOJson(mapDataset.latColumn, mapDataset.lngColumn))
+                                , "application/vnd.geo+json");
+                        result.FileDownloadName = mapDataset.name + ".json";
+                        break;
+                }
+                return result;
+
             }
-
-
-            return result;
+            else
+            {
+                return null;
+            }
         }
 
         [Cache("ds")]
@@ -161,7 +208,7 @@ namespace MVCproject.Controllers
         [HttpPost]
         public ContentResult GetPoint(int ds, int point) {
 
-            MapDataset mapDataset = ((List<MapDataset>)Session["user-datasets"]).First(D => D.id == ds);
+            MapDataset mapDataset = UserDatasets().FirstOrDefault(D => D.id == ds);
 
             ContentResult result = new ContentResult();
             result.ContentType = "application/json";
@@ -182,8 +229,23 @@ namespace MVCproject.Controllers
         public JsonResult DeletePoint(int ds, int point) { return null; }
 
 
+        /// <summary>
+        /// return a list with all available public datasets
+        /// </summary>
+        /// <param name="search">search string to filter the list</param>
+        [HttpPost]
+        public JsonResult PublicDatasets(string search)
+        {
 
+            JsonResult result = new JsonResult();
 
+            using (Dataset dataset = new Dataset(database))
+            {
+                result.Data = dataset.PublicList();
+            }
+
+            return result;
+        }
 
 
         [ValidateInput(false)]

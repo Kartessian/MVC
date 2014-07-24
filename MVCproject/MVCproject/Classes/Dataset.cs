@@ -16,6 +16,9 @@ namespace MVCproject
             this.database_ = database;
         }
 
+        /// <summary>
+        /// Creates a new dataset for the specified user, using the data in the datatable
+        /// </summary>
         public int CreateFromTable(DataTable table, int userId, string fileName)
         {
 
@@ -70,11 +73,24 @@ namespace MVCproject
             return 0;
         }
 
-        public DataTable GetPoint(string tmpTable, int point)
+        /// <summary>
+        /// Add a dataset to the specified map
+        /// </summary>
+        public void Attach(int DatasetId, int mapId)
         {
-            return database_.GetDataTable("select * from `datasets`.`" + tmpTable + "` where id = @id", new KeyValuePair<string, object>("@id", point));
         }
 
+        /// <summary>
+        /// Deletes the relationship between a map and a dataset
+        /// </summary>
+        public void Detach(int DatasetId, int mapId)
+        {
+
+        }
+
+        /// <summary>
+        /// Deletes the specified dataset. It will also drop the table that contains the data
+        /// </summary>
         public void Delete(int DatasetId)
         {
             object existing_table_name = database_.ExecuteScalar("select tableName from datasets where id = @id",
@@ -82,12 +98,62 @@ namespace MVCproject
 
             if (existing_table_name != null && existing_table_name != DBNull.Value)
             {
-                // remove the entry from the datasets table
-                database_.ExecuteSQL("delete from `datasets` where name = @id", new KeyValuePair<string, object>("@id", DatasetId));
+                database_.BeginTransaction();
 
-                // drop the table asocciated to the dataset
-                database_.ExecuteSQL("drop table `datasets`.`" + existing_table_name + "`");
+                try
+                {
+                    // remove the entry from the datasets table
+                    database_.ExecuteSQL("delete from `datasets` where name = @id", new KeyValuePair<string, object>("@id", DatasetId));
+
+                    // drop the table asocciated to the dataset
+                    database_.ExecuteSQL("drop table `datasets`.`" + existing_table_name + "`");
+
+                    database_.Commit();
+
+                } catch {
+                    database_.RollBack();
+                }
             }
+        }
+
+        /// <summary>
+        /// Returns a list with all public available datasets
+        /// </summary>
+        public List<MapDataset> PublicList()
+        {
+            return database_.GetRecords<MapDataset>(new KeyValuePair<string, object>("isPublic", true));
+        }
+
+        /// <summary>
+        /// Return a list with all the datasets that belongs or are available 
+        /// (because they are public and the user added to one of his maps) to a specified user
+        /// </summary>
+        public List<MapDataset> UserList(int userId)
+        {
+            return database_.GetRecords<MapDataset>(
+                "select d.* from datasets d inner join user_datasets u on u.datasetId = d.id and u.id = @userId", 
+                new KeyValuePair<string, object>("@userId", userId)
+            );
+        }
+
+        /// <summary>
+        /// Return a list with the datasets currently being used by an user on his maps
+        /// </summary>
+        public List<MapDataset> UserActiveList(int userId)
+        {
+            // TODO --> Need to update the query to join with the dataset-map table.
+            return database_.GetRecords<MapDataset>(
+                "select d.* from datasets d inner join user_datasets u on u.datasetId = d.id and u.id = @userId",
+                new KeyValuePair<string, object>("@userId", userId)
+            );
+        }
+
+        /// <summary>
+        /// Returns the row for the selected point in the dataset table
+        /// </summary>
+        public DataTable GetPoint(string tmpTable, int point)
+        {
+            return database_.GetDataTable("select * from `datasets`.`" + tmpTable + "` where id = @id", new KeyValuePair<string, object>("@id", point));
         }
 
         public void Dispose()

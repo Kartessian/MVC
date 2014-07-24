@@ -113,6 +113,43 @@ namespace MVCproject
             return oDataTable;
         }
 
+        public List<T> GetRecords<T>(string query, params KeyValuePair<string, object>[] parameters) where T : ITable, new()
+        {
+            List<T> result = new List<T>();
+
+            T newObject = new T();
+
+            List<string> Properties = GetObjectProperties<T>();
+
+            DataTable dt = GetDataTable(query, parameters);
+            for (int i = 0; i < Properties.Count; i++)
+            {
+                if (!dt.Columns.Contains(Properties[i]))
+                {
+                    Properties.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            foreach (DataRow row in dt.Rows)
+            {
+                newObject = new T();
+
+                foreach (string propName in Properties)
+                {
+                    if (((!object.ReferenceEquals(row[propName], DBNull.Value))))
+                    {
+                        newObject.GetType().GetProperty(propName).SetValue(newObject, row[propName], null);
+                    }
+                }
+
+                result.Add(newObject);
+            }
+
+
+            return result;
+        }
+
         public List<T> GetRecords<T>(params KeyValuePair<string, object>[] parameters) where T : ITable, new()
         {
             List<T> result = new List<T>();
