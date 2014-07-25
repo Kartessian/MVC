@@ -20,9 +20,9 @@ namespace MVCproject
             );
 
             routes.MapRoute(
-                name: "Default",
+                name: "Editor",
                 url: "{action}/{id}",
-                defaults: new { controller = "Default", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "Editor", action = "Index", id = UrlParameter.Optional }
             );
 
             routes.MapRoute(

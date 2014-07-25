@@ -18,7 +18,7 @@
                 </div>
             }
             <div class="lgnbox">
-                <form action="/DoLogin">
+                <form action="/account/login" method="post">
                     <span>Email</span>
                     <input type="text" class="lgnipt" placeholder="email address" name="username" value="@ViewBag.email" />
                     <br />
@@ -37,4 +37,3 @@
         </div>
     </div>
 </div>
-<script>$(function () { $("form").attr("method", "post").attr("action", ""); })</script>

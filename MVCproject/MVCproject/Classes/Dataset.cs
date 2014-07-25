@@ -160,7 +160,7 @@ namespace MVCproject
         /// </summary>
         public List<MapDataset> PublicList()
         {
-            return database_.GetRecords<MapDataset>(new KeyValuePair<string, object>("isPublic", true));
+            return database_.GetRecords<MapDataset>(new KeyValuePair<string, object>("access", "public"));
         }
 
         /// <summary>
@@ -170,7 +170,7 @@ namespace MVCproject
         public List<MapDataset> UserList(int userId)
         {
             return database_.GetRecords<MapDataset>(
-                "select d.* from datasets d inner join user_datasets u on u.datasetId = d.id and u.id = @userId", 
+                "select d.* from datasets d inner join users_datasets u on u.dataset_id = d.id and u.user_id = @userId", 
                 new KeyValuePair<string, object>("@userId", userId)
             );
         }
@@ -180,9 +180,10 @@ namespace MVCproject
         /// </summary>
         public List<MapDataset> UserActiveList(int userId)
         {
-            // TODO --> Need to update the query to join with the dataset-map table.
             return database_.GetRecords<MapDataset>(
-                "select d.* from datasets d inner join user_datasets u on u.datasetId = d.id and u.id = @userId",
+                "select d.* from datasets d " +
+                " inner join users_datasets u on u.dataset_id = d.id and u.user_id = @userId " +
+                " inner join maps_datasets m on m.dataset_id = d.id", 
                 new KeyValuePair<string, object>("@userId", userId)
             );
         }

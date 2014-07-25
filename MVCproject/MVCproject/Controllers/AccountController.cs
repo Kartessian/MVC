@@ -43,7 +43,7 @@ namespace MVCproject.Controllers
                         Session["user"] = user;
                         account.SetLastVisit(user.id, RequestIP());
 
-                        return RedirectToAction("Index", "Default");
+                        return RedirectToAction("Index", "Editor");
                     }
                     else
                     {
@@ -60,6 +60,9 @@ namespace MVCproject.Controllers
         {
             // Clean the session, that will do the job
             Session.Clear();
+
+            // Ready to do login again
+            Session[imHere_Login] = true;
 
             // Shows the login page
             return View("Login");

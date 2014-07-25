@@ -9,7 +9,7 @@ using System.Web.Mvc;
 namespace MVCproject.Controllers
 {
 
-    public class DefaultController : BaseController
+    public class EditorController : BaseController
     {
         const string user_maps = "user-maps";
         const string user_datasets = "user-datasets";

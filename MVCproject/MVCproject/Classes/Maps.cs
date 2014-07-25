@@ -34,7 +34,7 @@ namespace MVCproject
         public List<UserMaps> UserMaps(int userId)
         {
             return database_.GetRecords<UserMaps>(
-                "select m.* from maps m inner join user-maps u on u.mapId = m.id and u.userId = @userId ",
+                "select m.* from maps m inner join users_maps u on u.map_id = m.id and u.user_id = @userId ",
                 new KeyValuePair<string, object>("@userId", userId)
             );
         }
