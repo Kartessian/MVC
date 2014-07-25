@@ -187,6 +187,7 @@
     <Content Include="Global.asax" />
     <Content Include="Images\back-pattern.png" />
     <Content Include="Images\kartessian.png" />
+    <Content Include="Images\preloader.gif" />
     <Content Include="Images\sidebar.mini.png" />
     <Content Include="Images\sidebar.png" />
     <Content Include="Templates\email.html" />
