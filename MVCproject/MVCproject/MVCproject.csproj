@@ -175,12 +175,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\fonts\fontawesome-webfont.svg" />
+    <Content Include="Content\Ktsn.editor.css" />
+    <Content Include="Content\Ktsn.editor.min.css">
+      <DependentUpon>Ktsn.editor.css</DependentUpon>
+    </Content>
     <Content Include="Content\Ktsn.login.css" />
     <Content Include="Content\Ktsn.login.min.css">
       <DependentUpon>Ktsn.login.css</DependentUpon>
     </Content>
     <Content Include="Global.asax" />
-    <Content Include="Content\Site.css" />
+    <Content Include="Images\back-pattern.png" />
     <Content Include="Images\kartessian.png" />
     <Content Include="Templates\email.html" />
     <Content Include="Web.config">
@@ -226,6 +231,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\_Layout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Editor\SideBar.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\fonts\fontawesome-webfont.eot" />
+    <Content Include="Content\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Content\fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\fonts\FontAwesome.otf" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
