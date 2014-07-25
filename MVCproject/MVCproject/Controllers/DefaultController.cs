@@ -82,9 +82,7 @@ namespace MVCproject.Controllers
                 mapId = maps.Create(Name, string.Empty, user.id);
             }
 
-            JsonResult result = new JsonResult();
-            result.Data = mapId;
-            return result;
+            return new JsonResult() { Data = mapId };
         }
 
         [HttpPost][VerifyOwner]
@@ -95,9 +93,7 @@ namespace MVCproject.Controllers
                 maps.Delete(id);
             }
 
-            JsonResult result = new JsonResult();
-            result.Data = "Ok";
-            return result;
+            return new JsonResult() { Data = "Ok" };
         }
 
         [HttpPost][VerifyOwner]
@@ -108,9 +104,7 @@ namespace MVCproject.Controllers
                 maps.Update(id, newName, string.Empty);
             }
 
-            JsonResult result = new JsonResult();
-            result.Data = "Ok";
-            return result;
+            return new JsonResult() { Data = "Ok" };
         }
 
         [HttpPost][VerifyOwner]
@@ -122,13 +116,24 @@ namespace MVCproject.Controllers
         [HttpPost]
         public JsonResult CreateDataset(string name)
         {
+            using (Dataset dataset = new Dataset(database))
+            {
+                
+            }
+            
             return null;
+
         }
 
         [HttpPost][VerifyOwner]
         public JsonResult UpdateDataset(int ds, string newName)
         {
-            return null;
+            using (Dataset dataset = new Dataset(database))
+            {
+                dataset.Update(ds, newName);
+            }
+
+            return new JsonResult() { Data = "Ok" };
         }
 
         [HttpPost][VerifyOwner]
@@ -139,9 +144,7 @@ namespace MVCproject.Controllers
                 dataset.Delete(ds);
             }
 
-            JsonResult result = new JsonResult();
-            result.Data = "Ok";
-            return result;
+            return new JsonResult() { Data = "Ok" };
         }
 
         [Cache("ds")]
@@ -222,12 +225,43 @@ namespace MVCproject.Controllers
             return result;
         }
 
-        [HttpPost]
-        public JsonResult AddPoint(int ds, string point) { return null; }
+        [HttpPost][VerifyOwner]
+        public JsonResult AddPoint(int ds, string lat, string lng) {
 
-        [HttpPost]
-        public JsonResult DeletePoint(int ds, int point) { return null; }
+            MapDataset mapDataset = UserDatasets().FirstOrDefault(D => D.id == ds);
 
+            long newId = 0;
+
+            using (Dataset dataset = new Dataset(database))
+            {
+                double latitude = 0;
+                double longitude = 0;
+                if (double.TryParse(lat, out latitude) && double.TryParse(lng, out longitude))
+                {
+                    newId = dataset.AddPoint(mapDataset.tmpTable, mapDataset.latColumn, mapDataset.lngColumn, latitude, longitude);
+                }
+            }
+
+            return new JsonResult() { Data = newId };
+        }
+
+        [HttpPost][VerifyOwner]
+        public JsonResult DeletePoint(int ds, int point) {
+            using (Dataset dataset = new Dataset(database))
+            {
+                MapDataset mapDataset = UserDatasets().FirstOrDefault(D => D.id == ds);
+                
+                dataset.DeletePoint(mapDataset.tmpTable , point);
+            }
+
+            return new JsonResult() { Data = "Ok" };
+        }
+
+        [HttpPost][VerifyOwner]
+        public JsonResult EditPoint(int ds, int poitn, string field, string value)
+        {
+            return null;
+        }
 
         /// <summary>
         /// return a list with all available public datasets

@@ -116,6 +116,45 @@ namespace MVCproject
             }
         }
 
+        public long AddPoint(string TableName, string latColumn, string lngColumn, double latitude, double longitude)
+        {
+            database_.BeginTransaction();
+            try
+            {
+                database_.ExecuteSQL("insert into `datasets`.`" + TableName + "` (`" + latColumn + "`,`" + lngColumn + "`) values (@lat,@lng)",
+                        new KeyValuePair<string, object>("@lat", latitude),
+                        new KeyValuePair<string, object>("@lng", longitude)
+                    );
+
+                long newId = (long)database_.ExecuteScalar("select id from `datasets`.`" + TableName + "` order by id desc limit 1");
+
+                database_.Commit();
+
+                return newId;
+            }
+            catch
+            {
+                database_.RollBack();
+                return 0;
+            }
+        }
+
+        public void DeletePoint(string TableName, int PointId)
+        {
+            database_.ExecuteSQL("delete from `datasets`.`" + TableName + "` where id = @id",
+                    new KeyValuePair<string, object>("@id", PointId)
+                );
+        }
+
+        public void Update(int DatasetId, string newName)
+        {
+            database_.ExecuteSQL(
+                "update datasets set name = @name where id = @id",
+                new KeyValuePair<string,object>("@name", newName),
+                new KeyValuePair<string, object>("@id", DatasetId)
+                );
+        }
+
         /// <summary>
         /// Returns a list with all public available datasets
         /// </summary>
