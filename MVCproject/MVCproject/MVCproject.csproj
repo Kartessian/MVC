@@ -190,6 +190,7 @@
     <Content Include="Images\preloader.gif" />
     <Content Include="Images\sidebar.mini.png" />
     <Content Include="Images\sidebar.png" />
+    <Content Include="Scripts\ktsn.editor.js" />
     <Content Include="Templates\email.html" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -206,7 +207,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Scripts\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -243,6 +243,9 @@
     <Content Include="Content\fonts\fontawesome-webfont.ttf" />
     <Content Include="Content\fonts\fontawesome-webfont.woff" />
     <Content Include="Content\fonts\FontAwesome.otf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Editor\Dialogs.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

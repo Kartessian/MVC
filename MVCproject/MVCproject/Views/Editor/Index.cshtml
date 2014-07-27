@@ -14,3 +14,13 @@
 <div id="ktsn-busy-background"></div>
 
 <div id="ktsn-busy-dialog">Loading...</div>
+
+<div id="ktsn-dialogs" class="dialog-wrap">
+    <div>
+        @Html.Partial("Dialogs")
+    </div>
+</div>
+
+@section scripts {
+$(function() { ktsn.init(); });
+}

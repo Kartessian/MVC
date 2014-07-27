@@ -6,10 +6,13 @@
     <title>@ViewBag.Title</title>
     <link rel="stylesheet" href="/Content/Ktsn.editor.min.css" />
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="/Scripts/ktsn.editor.js"></script>
 </head>
 <body>
     @RenderBody()
 
+    <script type="text/javascript">
     @RenderSection("scripts", required: false)
+    </script>
 </body>
 </html>
