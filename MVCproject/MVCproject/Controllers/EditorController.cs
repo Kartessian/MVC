@@ -65,6 +65,8 @@ namespace MVCproject.Controllers
                 model.datasets = dataset.UserActiveList(user.id);
             }
 
+            model.user = user;
+
             // it will store the resume in the session as will be access later with other requests
             // this will also help to validate requests from the user
             SetUserSession(model.maps, model.datasets);

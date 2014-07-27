@@ -1,15 +1,16 @@
-﻿<div id="ktsn-dialogs-user" class="dialog-window">
+﻿@model MVCproject.Default_Index
+<div id="ktsn-dialogs-user" class="dialog-window">
 
     <div style="float: left; width: 90px;">
         <span class="dialog-icon sidebar-user">Account</span>
     </div>
 
-    <div style="float: left; width: 300px; border-left: 1px solid #ccc; padding: 0 0 0 12px; text-align: left;">
+    <div style="float: left; border-left: 1px solid #ccc; padding: 0 0 0 12px; margin-left:12px; text-align: left;">
         <dl>
             <dt>Name</dt>
-            <dd>javier</dd>
+            <dd><input type="text" value="" id="dlg-usr-name"/></dd>
             <dt>Email</dt>
-            <dd>javier&#64;email.com</dd>
+            <dd><input type="email" value="@Model.user.email" id="dlg-usr-email" /></dd>
         </dl>
 
         <div style="text-align: right;">
@@ -27,16 +28,16 @@
         <span class="dialog-icon sidebar-my">My Maps</span>
     </div>
 
-    <div style="float: left; width: 300px; border-left: 1px solid #ccc; padding: 0 0 0 12px; text-align: left;">
-        <dl>
-            <dt>Name</dt>
-            <dd>javier</dd>
-            <dt>Email</dt>
-            <dd>javier&#64;email.com</dd>
-        </dl>
+    <div style="float: left; border-left: 1px solid #ccc; padding: 0 0 0 12px; margin-left:12px; text-align: left;">
+        <ul class="map-list">
+            @foreach (var map in Model.maps)
+            {
+                <li><label></label> <span class="@map.access">@map.name</span> <small>@map.createdOn.ToString("MMM, dd yyyy")</small></li>
+            }
+        </ul>
 
         <div style="text-align: right;">
-            <button class="bnSave">Save</button>
+            <button class="bnSave">Load</button>
             <button class="bnClose">Close</button>
         </div>
 

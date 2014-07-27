@@ -14,20 +14,14 @@ namespace MVCproject
             get { return "Maps"; }
         }
 
-        [RelatedField]
-        public List<MapDataset> Datasets { get; set; }
-
         [PrimaryKeyDefinition(true, true)]
         public int id { get; set; }
 
         public string name { get; set; }
+        public string access { get; set; }
+        public DateTime createdOn { get; set; }
 
         public UserMaps() { }
-
-        public UserMaps(DataRow r)
-        {
-            id = (int)r["id"];
-        }
 
     }
 }

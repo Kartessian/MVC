@@ -10,5 +10,7 @@ namespace MVCproject
         public List<MapStyle> styles { get; set; } // available map styles for all users
         public List<UserMaps> maps { get; set; } // current existing maps for the user
         public List<MapDataset> datasets { get; set; } // datasets created by the user
+
+        public User user { get; set; }
     }
 }
