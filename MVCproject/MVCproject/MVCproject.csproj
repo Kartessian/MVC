@@ -191,6 +191,10 @@
     <Content Include="Images\sidebar.mini.png" />
     <Content Include="Images\sidebar.png" />
     <Content Include="Scripts\ktsn.editor.js" />
+    <Content Include="Scripts\nano.js" />
+    <Content Include="Scripts\nano.min.js">
+      <DependentUpon>nano.js</DependentUpon>
+    </Content>
     <Content Include="Templates\email.html" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -246,6 +250,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Editor\Dialogs.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\nano.min.js.map">
+      <DependentUpon>nano.js</DependentUpon>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

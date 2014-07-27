@@ -32,13 +32,14 @@
     </div>
 
     <div style="float: left; border-left: 1px solid #ccc; padding: 0 0 0 12px; margin-left:12px; text-align: left;">
-        <ul class="map-list">
+        <div class="nano" style="height:400px; width:500px; position:relative;">
+        <ul class="map-list nano-content">
             @foreach (var map in Model.maps)
             {
                 <li><label></label> <span class="@map.access">@map.name</span> <small>@map.createdOn.ToString("MMM, dd yyyy")</small></li>
             }
         </ul>
-
+        </div>
         <div style="text-align: right;">
             <button class="bnSave">Load</button>
             <button class="bnClose">Close</button>

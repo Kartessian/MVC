@@ -57,6 +57,7 @@
                 t._current.find(".bnClose,.bnSave").off("click");
                 t._current = null;
             }
+            $(".nano").nanoScroller({ destroy: true });
             $("#ktsn-busy-background").hide();
         },
 
@@ -73,6 +74,7 @@
                     break;
             }
 
+            $(".nano").nanoScroller();
         }
     },
 
