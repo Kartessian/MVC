@@ -210,6 +210,10 @@ dd
     background-image: url(/images/sidebar.mini.png);
 }
 
+.dialog-status {
+    float:left;
+}
+
 .sidebar-menu {
     list-style: none;
     margin: 0;

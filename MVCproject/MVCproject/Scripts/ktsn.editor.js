@@ -9,6 +9,15 @@
         this.sidebar.layers.hide();
         this.sidebar.share.hide();
 
+
+        // setup ajax calls to handle exceptions
+        // still plenty of work to do here, but the basic will work for now
+        $(document).ajaxError(function (event, xhr, settings) {
+            if (xhr.status == 401) { // unauthorized - reload the page
+                document.location = "/";
+            }
+        });
+
         this.busy(false);
     },
 
@@ -26,18 +35,26 @@
         _container: null,
         _current: null,
 
+        _account_save: function () {
+            var t = $(this);
+            t.html("...").off("click");
+            $.post('UpdateAccount', { name: $("#dlg-user-name").val(), email: $("#dlg-user-email").val(), password: $("#dlg-user-password").val() }, function (result) {
+                t.siblings("span").html("Saved!");
+                t.html("Save").on("click", ktsn.dialogs._account_save);
+            });
+        },
+
         init: function () {
             this._dialogs = $(".dialog-window");
             this._container = $("#ktsn-dialogs");
         },
-
 
         hide: function () {
             var t = ktsn.dialogs;
             t._container.hide();
             if (t._current) {
                 t._current.hide();
-                t._current.find(".bnClose").off("click");
+                t._current.find(".bnClose,.bnSave").off("click");
                 t._current = null;
             }
             $("#ktsn-busy-background").hide();
@@ -49,6 +66,13 @@
             this._current = $("#ktsn-dialogs-" + name).css("display", "inline-block");
 
             this._current.find(".bnClose").on("click", ktsn.dialogs.hide);
+
+            switch(name) {
+                case "user":
+                    this._current.find(".bnSave").on("click", ktsn.dialogs._account_save);
+                    break;
+            }
+
         }
     },
 

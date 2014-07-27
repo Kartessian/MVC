@@ -74,7 +74,9 @@ namespace MVCproject.Controllers
             return View(model);
         }
 
-        // skelleton of the available methos that will be needed
+        #region Maps
+
+
         [HttpPost]
         public JsonResult CreateMap(string Name)
         {
@@ -112,8 +114,9 @@ namespace MVCproject.Controllers
         [HttpPost][VerifyOwner]
         public JsonResult SetStyle(int id, string style, int zoom, string center) { return null; }
 
+        #endregion
 
-
+        #region Datasets
 
         [HttpPost]
         public JsonResult CreateDataset(string name)
@@ -210,6 +213,28 @@ namespace MVCproject.Controllers
         // Alpha, Visible, Etc...
 
 
+        /// <summary>
+        /// return a list with all available public datasets
+        /// </summary>
+        /// <param name="search">search string to filter the list</param>
+        [HttpPost]
+        public JsonResult PublicDatasets(string search)
+        {
+
+            JsonResult result = new JsonResult();
+
+            using (Dataset dataset = new Dataset(database))
+            {
+                result.Data = dataset.PublicList();
+            }
+
+            return result;
+        }
+
+        #endregion
+
+        #region Points
+
         [HttpPost]
         public ContentResult GetPoint(int ds, int point) {
 
@@ -265,24 +290,30 @@ namespace MVCproject.Controllers
             return null;
         }
 
-        /// <summary>
-        /// return a list with all available public datasets
-        /// </summary>
-        /// <param name="search">search string to filter the list</param>
+        #endregion
+
+        #region Account
+
         [HttpPost]
-        public JsonResult PublicDatasets(string search)
+        public JsonResult UpdateAccount(string name, string email, string password)
         {
-
-            JsonResult result = new JsonResult();
-
-            using (Dataset dataset = new Dataset(database))
+            using (Account account = new Account(database))
             {
-                result.Data = dataset.PublicList();
-            }
+                if (string.IsNullOrEmpty(name))
+                {
+                    name = user.name;
+                }
+                if (string.IsNullOrEmpty(email))
+                {
+                    email = user.email;
+                }
 
-            return result;
+                account.UpdateUser(user.id, name, email, password);
+            }
+            return new JsonResult() { Data = "Ok" };
         }
 
+        #endregion
 
         [ValidateInput(false)]
         [OmitDatabase()]

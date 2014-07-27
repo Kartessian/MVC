@@ -47,6 +47,26 @@ namespace MVCproject
                 ) > 0;
         }
 
+        public void UpdateUser(int userId, string name, string email, string password)
+        {
+            if (string.IsNullOrEmpty(password)) {
+                database_.ExecuteSQL("update users set name = @name, email = @email where id = @id",
+                        new KeyValuePair<string, object>("@name", name),
+                        new KeyValuePair<string, object>("@email", email),
+                        new KeyValuePair<string, object>("@id", userId)
+                    );
+            }
+            else
+            {
+                database_.ExecuteSQL("update users set name = @name, email = @email, password = @password where id = @id",
+                        new KeyValuePair<string, object>("@name", name),
+                        new KeyValuePair<string, object>("@email", email),
+                        new KeyValuePair<string, object>("@password", password),
+                        new KeyValuePair<string, object>("@id", userId)
+                    );
+            }
+        }
+
         public void CreateUser(string email, string name, string password, string ip)
         {
             string sSQL = "insert into `users` (`name`,`email`,`password`,`createdon`,`createdIP`) values (@name,@email,@password,NOW(),'" + ip + "')";

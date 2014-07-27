@@ -44,11 +44,12 @@ namespace MVCproject.Controllers
                 }
                 else
                 {
-                    var result = new ContentResult();
-                    result.ContentType = "application/json";
-                    result.Content = "\"Unauthorized\"";
+                    // return unauthorized status (401)
+                    // and empty result, no need to return any data
 
-                    filterContext.Result = result;
+                    filterContext.HttpContext.Response.StatusCode = 401;
+                    filterContext.Result = new EmptyResult();
+
                     return;
                 }
             }

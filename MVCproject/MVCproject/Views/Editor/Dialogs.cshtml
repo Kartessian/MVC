@@ -1,5 +1,5 @@
 ﻿@model MVCproject.Default_Index
-<div id="ktsn-dialogs-user" class="dialog-window">
+<div id="ktsn-dialogs-user" class="dialog-window" data-action="UpdateAccount" data-type="form">
 
     <div style="float: left; width: 90px;">
         <span class="dialog-icon sidebar-user">Account</span>
@@ -7,13 +7,16 @@
 
     <div style="float: left; border-left: 1px solid #ccc; padding: 0 0 0 12px; margin-left:12px; text-align: left;">
         <dl>
-            <dt>Name</dt>
-            <dd><input type="text" value="" id="dlg-usr-name"/></dd>
-            <dt>Email</dt>
-            <dd><input type="email" value="@Model.user.email" id="dlg-usr-email" /></dd>
+            <dt>Name:</dt>
+            <dd><input type="text" value="@Model.user.name" id="dlg-user-name"/></dd>
+            <dt>Email:</dt>
+            <dd><input type="email" value="@Model.user.email" id="dls-user-email" /></dd>
+            <dt>Password:</dt>
+            <dd><input type="password" value="" id="dlg-user-password"/></dd>
         </dl>
 
         <div style="text-align: right;">
+            <span class="dialog-status"></span>
             <button class="bnSave">Save</button>
             <button class="bnClose">Close</button>
         </div>
