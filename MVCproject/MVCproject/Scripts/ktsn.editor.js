@@ -54,7 +54,7 @@
             t._container.hide();
             if (t._current) {
                 t._current.hide();
-                t._current.find(".bnClose,.bnSave").off("click");
+                t._current.find(".bnClose,.bnSave,.map-list li").off("click");
                 t._current = null;
             }
             $(".nano").nanoScroller({ destroy: true });
@@ -70,7 +70,12 @@
 
             switch(name) {
                 case "user":
-                    this._current.find(".bnSave").on("click", ktsn.dialogs._account_save);
+                    this._current.find(".bnSave").on("click", ktsn.dialogs._account_save)
+                    break;
+                case "my":
+                    this._current.find(".map-list li").on("click", function (e) {
+                        $(this).addClass("selected").siblings().removeClass("selected");
+                    });
                     break;
             }
 

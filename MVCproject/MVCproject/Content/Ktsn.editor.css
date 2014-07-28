@@ -365,7 +365,13 @@ dd
 
 .map-list li {
     border-bottom:1px solid #ccc;
-    padding:8px 12px;
+    padding:8px 16px 8px 38px;
+    background:url(/images/klaus.png) no-repeat 4px 0;
+}
+
+.map-list li.selected {
+    background-position-y:-28px;
+    background-color:#ffdca5;
 }
 
 .map-list li label {
@@ -397,6 +403,41 @@ dd
     {
         content:'\f023'
     }
+
+
+input[type=checkbox].css-checkbox {
+	position: absolute; 
+    overflow: hidden; 
+    clip: rect(0 0 0 0); 
+    height:1px; 
+    width:1px; 
+    margin:-1px; 
+    padding:0;
+    border:0;
+}
+
+input[type=checkbox].css-checkbox + label {
+	padding-left:22px;
+    height:20px; 
+	display:inline-block;
+	line-height:20px;
+	background-repeat:no-repeat;
+	background-position: 0 0;
+	vertical-align:middle;
+    cursor:pointer;
+    background-image:url(/images/klaus.png);
+-webkit-touch-callout: none;
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+margin-right:10px;
+}
+
+input[type=checkbox].css-checkbox:checked + label {
+    background-position: 0 -20px;
+}
 
 /* nano scroller */
 /** initial setup **/
