@@ -100,6 +100,11 @@ namespace MVCproject.Controllers
             return new JsonResult() { Data = "Ok" };
         }
 
+        /// <summary>
+        /// Despite of the name of the function, this actually returns all datasets that are being used in the map.
+        /// Is intended that this function will return all data associated with the selected map, including styles.
+        /// </summary>
+        /// <param name="id">Map id</param>
         [HttpPost][VerifyOwner]
         public JsonResult LoadMap(int id)
         {
@@ -163,12 +168,40 @@ namespace MVCproject.Controllers
             return new JsonResult() { Data = "Ok" };
         }
 
+        /// <summary>
+        /// Gets the basic dataset details, not the data
+        /// </summary>
+        /// <param name="ds">Dataset id</param>
+        /// <returns>MapDataset object</returns>
         [Cache("ds")]
         public JsonResult GetDataset(int ds)
         {
             JsonResult result = new JsonResult();
             result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
             result.Data = UserDatasets().FirstOrDefault(D => D.id == ds);
+
+            return result;
+        }
+
+
+        /// <summary>
+        /// Load the basic data associated to a Dataset: point id, latitude and longitude
+        /// </summary>
+        /// <param name="ds">Dataset Id</param>
+        /// <returns>Custom JsonTable Formatted JSON</returns>
+        [Cache("ds")]
+        public ContentResult LoadDataset(int ds)
+        {
+            ContentResult result = new ContentResult();
+            result.ContentType = "application/json";
+
+            using (Dataset dataset = new Dataset(database))
+            {
+                MapDataset mapDataset = UserDatasets().FirstOrDefault(D => D.id == ds);
+
+                result.Content = dataset.Load(mapDataset.tmpTable,"id", mapDataset.latColumn, mapDataset.lngColumn).ToJsonTable();
+
+            }
 
             return result;
         }

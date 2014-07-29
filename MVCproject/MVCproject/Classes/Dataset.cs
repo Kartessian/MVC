@@ -155,6 +155,17 @@ namespace MVCproject
                 );
         }
 
+        public DataTable Load(string TableName, params string[] columns)
+        {
+            if (columns != null) {
+                return database_.GetDataTable("select `" + string.Join("`,`", columns) + "` from `datasets`.`" + TableName + "`");
+            }
+            else
+            {
+                return database_.GetDataTable("select * from `datasets`.`" + TableName + "`");
+            }
+        }
+
         /// <summary>
         /// Returns a list with all public available datasets
         /// </summary>

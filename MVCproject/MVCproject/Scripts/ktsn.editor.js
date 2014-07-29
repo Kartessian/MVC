@@ -101,6 +101,20 @@
             // depending on the user selection
             // should init Google Maps or Mapbox
             // by default, use Google Maps
+
+            // initializes google maps - should be called once only.
+            var mapOptions = {
+                center: new google.maps.LatLng(37.72658651203338, 264.55766830232244)
+                , zoom: 5
+                , mapTypeId: google.maps.MapTypeId.ROADMAP
+                , mapTypeControl: false
+                , streetViewControl: false
+                , panControl: false
+                , zoomControl: false
+                , minZoom: 3
+            };
+
+            this._map = new google.maps.Map(document.getElementById("ktsn-map"), mapOptions);
         },
 
         load: function (mapId) {
@@ -108,8 +122,19 @@
                 var ds = [];
                 $.each(result, function (ix, dataset) {
                     ds.push(dataset);
+                    ktsn.map.loadDataset(
+                        dataset.id,
+                        dataset.name,
+                        ds.length - 1
+                    );
                 });
                 ktsn.map._datasets = ds;
+            });
+        },
+
+        loadDataset: function (id, name, ix) {
+            $.post('/LoadDataset', { ds: id }, function (result) {
+                ktsn.map._datasets[ix].canvasLabels = new canvasLabels(null, result, name);
             });
         },
 

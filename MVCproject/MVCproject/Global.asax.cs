@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
@@ -20,6 +21,8 @@ namespace MVCproject
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            Application.Add("MapApiKey", ConfigurationManager.AppSettings["MapApiKey"].ToString());
         }
     }
 }
