@@ -36,12 +36,12 @@
         <ul class="map-list nano-content">
             @foreach (var map in Model.maps)
             {
-                <li><span class="@map.access">@map.name</span> <small>@map.createdOn.ToString("MMM, dd yyyy")</small></li>
+                <li data-id="@map.id"><span class="@map.access">@map.name</span> <small>@map.createdOn.ToString("MMM, dd yyyy")</small></li>
             }
         </ul>
         </div>
         <div style="text-align: right;">
-            <button class="bnSave">Load</button>
+            <button class="bnLoad">Load</button>
             <button class="bnClose">Close</button>
         </div>
 

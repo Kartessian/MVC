@@ -101,6 +101,17 @@ namespace MVCproject.Controllers
         }
 
         [HttpPost][VerifyOwner]
+        public JsonResult LoadMap(int id)
+        {
+            JsonResult result = new JsonResult();
+            using (Dataset dataset = new Dataset(database))
+            {
+                result.Data = dataset.MapList(id);
+            }
+            return result;
+        }
+
+        [HttpPost][VerifyOwner]
         public JsonResult UpdateMap(int id, string newName)
         {
             using (Maps maps = new Maps(database))

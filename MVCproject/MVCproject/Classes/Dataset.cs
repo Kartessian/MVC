@@ -163,6 +163,15 @@ namespace MVCproject
             return database_.GetRecords<MapDataset>(new KeyValuePair<string, object>("access", "public"));
         }
 
+        public List<MapDataset> MapList(int mapId)
+        {
+            return database_.GetRecords<MapDataset>(
+                "select d.* from datasets d " +
+                " inner join maps_datasets m on m.dataset_id = d.id and m.map_id = @id",
+                new KeyValuePair<string, object>("@id", mapId)
+            );
+        }
+
         /// <summary>
         /// Return a list with all the datasets that belongs or are available 
         /// (because they are public and the user added to one of his maps) to a specified user

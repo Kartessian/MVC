@@ -54,7 +54,7 @@
             t._container.hide();
             if (t._current) {
                 t._current.hide();
-                t._current.find(".bnClose,.bnSave,.map-list li").off("click");
+                t._current.find(".bnClose,.bnSave,.bnLoad,.map-list li").off("click");
                 t._current = null;
             }
             $(".nano").nanoScroller({ destroy: true });
@@ -76,6 +76,12 @@
                     this._current.find(".map-list li").on("click", function (e) {
                         $(this).addClass("selected").siblings().removeClass("selected");
                     });
+                    this._current.find(".bnLoad").on("click", function (e) {
+                        ktsn.map.load(
+                            ktsn.dialogs._current.find(".map-list li.selected").data("id")
+                        );
+                        ktsn.dialogs.hide();
+                    });
                     break;
             }
 
@@ -87,12 +93,24 @@
 
         _mapName: null,
 
+        _datasets: null,
+
         init: function () {
             this._mapName = $("#ktsn-mapname");
 
             // depending on the user selection
             // should init Google Maps or Mapbox
             // by default, use Google Maps
+        },
+
+        load: function (mapId) {
+            $.post("/LoadMap", { "id": mapId }, function (result) {
+                var ds = [];
+                $.each(result, function (ix, dataset) {
+                    ds.push(dataset);
+                });
+                ktsn.map._datasets = ds;
+            });
         },
 
         name: function (name) {
