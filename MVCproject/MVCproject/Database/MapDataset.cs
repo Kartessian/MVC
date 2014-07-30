@@ -22,7 +22,9 @@ namespace MVCproject
         public string latColumn { get; set; } // name of the latitude column in the table
         public string lngColumn { get; set; } // name of the longigute column in the table
 
-        
+        [RelatedField]
+        public DatasetStyle style { get; set; } // custom style based on the selected map
+
         public MapDataset() {}
 
         public MapDataset(DataRow r) { }

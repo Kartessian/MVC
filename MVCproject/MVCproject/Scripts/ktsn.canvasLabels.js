@@ -17,32 +17,29 @@ function isCanvasContained(canvasbounds, mapbounds) {
 
 }
 
-function canvasLabels(map, dataset, name) {
+function canvasLabels(map, name, style, data) {
     this.canvas_ = null;
     this.hiddencanvas_ = document.createElement("canvas"); // used to draw in the background and then applied to the canvas
     this.colors_ = null;
     this.idleEvent_ = null;
-    this.zoomadjust_ = dataset.style.adjust;
-    this.icon_ = dataset.style.icon;
-    this.levels_ = dataset.style.levels;
-    if (dataset.style.column != null) {
-        this.column = dataset.style.column.split('~')[0];
-        this.columnValues = parseInt(dataset.style.column.split('~')[1]);
+    this.zoomadjust_ = style.adjust;
+    this.icon_ = style.icon;
+    this.levels_ = style.levels;
+    if (style.column != null) {
+        this.column = style.column.split('~')[0];
+        this.columnValues = parseInt(style.column.split('~')[1]);
     } else {
         this.column = null;
         this.columnValues = 0;
     }
 
     this.name_ = name;
-    this.fillColor = drawing.hexToRgb(dataset.style.c1);
-    this.borderColor = drawing.hexToRgb(dataset.style.c2);
-    this.pointSize = dataset.style.size;
-    this.alphaSize = dataset.style.alpha;
-    this.dotType = dataset.style.type;
+    this.fillColor = drawing.hexToRgb(style.color1);
+    this.borderColor = drawing.hexToRgb(style.color2);
+    this.pointSize = style.size;
+    this.alphaSize = style.alpha;
+    this.dotType = style.type;
     this.selected = [];
-    this.data_ = dataset.data;
-
-    data = this.data_;
 
     var i = 0, len = data.length,
         minlat = 180, maxlat = -180, minlng = 90, maxlng = -90,

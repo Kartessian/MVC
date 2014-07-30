@@ -176,11 +176,21 @@ namespace MVCproject
 
         public List<MapDataset> MapList(int mapId)
         {
-            return database_.GetRecords<MapDataset>(
+            List<MapDataset> mapList = database_.GetRecords<MapDataset>(
                 "select d.* from datasets d " +
                 " inner join maps_datasets m on m.dataset_id = d.id and m.map_id = @id",
                 new KeyValuePair<string, object>("@id", mapId)
             );
+
+            foreach (MapDataset dataset in mapList)
+            {
+                dataset.style = database_.GetRecords<DatasetStyle>(
+                    new KeyValuePair<string, object>("@map_id", mapId),
+                    new KeyValuePair<string, object>("@dataset_id", dataset.id)
+                    ).FirstOrDefault();
+            }
+
+            return mapList;
         }
 
         /// <summary>

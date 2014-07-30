@@ -73,7 +73,7 @@ namespace MVCproject
 
             foreach (DataColumn column in dt.Columns)
             {
-                sb.Append(",'" + column.ColumnName + "'");
+                sb.Append(",\"" + column.ColumnName + "\"");
             }
 
             List<object[]> data = new List<object[]>();
@@ -102,7 +102,7 @@ namespace MVCproject
 
             foreach (var property in typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(P => P.Name != "TableName"))
             {
-                sb.Append(",'" + property.Name + "'");
+                sb.Append(",\"" + property.Name + "\"");
                 available_properties.Add(property.Name);
             }
 

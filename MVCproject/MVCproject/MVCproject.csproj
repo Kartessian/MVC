@@ -160,6 +160,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\EmbedController.cs" />
     <Compile Include="Database\Database.cs" />
+    <Compile Include="Database\DatasetStyle.cs" />
     <Compile Include="Database\ITable.cs" />
     <Compile Include="Database\MapDataset.cs" />
     <Compile Include="Database\MapStyle.cs" />
@@ -191,6 +192,7 @@
     <Content Include="Images\preloader.gif" />
     <Content Include="Images\sidebar.mini.png" />
     <Content Include="Images\sidebar.png" />
+    <Content Include="Scripts\ktsn.drawing.js" />
     <Content Include="Scripts\ktsn.canvasLabels.js" />
     <Content Include="Scripts\ktsn.editor.js" />
     <Content Include="Scripts\nano.js" />

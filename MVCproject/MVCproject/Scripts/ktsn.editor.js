@@ -135,8 +135,7 @@
                 $.each(result, function (ix, dataset) {
                     ds.push(dataset);
                     ktsn.map.loadDataset(
-                        dataset.id,
-                        dataset.name,
+                        dataset,
                         ds.length - 1
                     );
                 });
@@ -145,9 +144,9 @@
             });
         },
 
-        loadDataset: function (id, name, ix) {
-            $.post('/LoadDataset', { ds: id }, function (result) {
-                ktsn.map._datasets[ix].canvasLabels = new canvasLabels(null, result, name);
+        loadDataset: function (dataset, ix) {
+            $.post('/LoadDataset', { ds: dataset.id }, function (result) {
+                ktsn.map._datasets[ix].canvasLabels = new canvasLabels(ktsn.map._map, dataset.name, dataset.style, result);
             });
         },
 
