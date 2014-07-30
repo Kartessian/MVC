@@ -117,7 +117,19 @@
             this._map = new google.maps.Map(document.getElementById("ktsn-map"), mapOptions);
         },
 
+        clean: function () {
+            if (ktsn.map._datasets != null) {
+                $.each(ktsn.map._datasets, function (ix, ds) {
+                    // remove the canvas layer
+                    ds.canvasLabels.destroy();
+                });
+                ktsn.map._datasets = null;
+            }
+        },
+
         load: function (mapId) {
+            ktsn.busy(true);
+            ktsn.map.clean();
             $.post("/LoadMap", { "id": mapId }, function (result) {
                 var ds = [];
                 $.each(result, function (ix, dataset) {
@@ -129,6 +141,7 @@
                     );
                 });
                 ktsn.map._datasets = ds;
+                ktsn.busy(false);
             });
         },
 

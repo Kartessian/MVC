@@ -91,6 +91,20 @@ function canvasLabels(map, dataset, name) {
 
 }
 
+canvasLabels.prototype.destroy = function () {
+    this.setMap(null);
+    this.hiddencanvas_ = null;
+    this.data_ = null;
+    if (this.canvas_ != null) {
+        this.canvas_.parentNode.removeChild(this.canvas_);
+        this.canvas_ = null;
+    }
+    if (this.idleEvent_ != null) {
+        google.maps.event.removeListener(this.idleEvent_); // clear the idle event from the overlay
+        this.idleEvent_ = null;
+    }
+}
+
 canvasLabels.prototype.addSelected = function (geo) {
     this.selected.push(geo);
 }
