@@ -135,11 +135,11 @@
             $.post("/LoadMap", { "id": mapId }, function (result) {
                 var ds = [];
                 $.each(result, function (ix, dataset) {
-                    ds.push(dataset);
                     ktsn.map.loadDataset(
                         dataset,
-                        ds.length - 1
+                        ds.length
                     );
+                    ds.push(dataset);
                 });
                 ktsn.map._datasets = ds;
 

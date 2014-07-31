@@ -118,8 +118,7 @@ canvasLabels.prototype.onAdd = function () {
     canvas.style.position = "absolute";
     canvas.setAttribute('id', this.name_);
     this.canvas_ = canvas;
-    this.getPanes().overlayMouseTarget.appendChild(canvas);
-
+    this.getPanes().mapPane.appendChild(canvas);
     if (this.icon_ != null && this.icon_.length > 0) {
         this.icon_image_ = document.createElement("img");
         this.icon_image_.setAttribute("src", '/images/icons/' + this.icon_);
