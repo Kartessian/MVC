@@ -119,7 +119,6 @@ canvasLabels.prototype.onAdd = function () {
     canvas.setAttribute('id', this.name_);
     this.canvas_ = canvas;
     this.getPanes().overlayMouseTarget.appendChild(canvas);
-    //google.maps.event.addListener(_My.gmap, 'click', function (event) {   })
 
     if (this.icon_ != null && this.icon_.length > 0) {
         this.icon_image_ = document.createElement("img");
@@ -157,8 +156,8 @@ canvasLabels.prototype.drawn = function (force) {
     }
 
     /* the canvas will always cover the full map */
-    var canvasWidth = _My.gmap.j.offsetWidth,
-        canvasHeight = _My.gmap.j.offsetHeight;
+    var canvasWidth = this.map.j.offsetWidth,
+        canvasHeight = this.map.j.offsetHeight;
 
     canvas.style.left = Math.round(sw.x) + 'px';
     canvas.style.top = Math.round(ne.y) + 'px';
@@ -168,9 +167,9 @@ canvasLabels.prototype.drawn = function (force) {
     var mne = mapbounds.getNorthEast(),
         msw = mapbounds.getSouthWest();
 
-    if (!isCanvasContained(this.bounds, [Math.min(mne.lat(), msw.lat()), Math.max(mne.lat(), msw.lat()), Math.min(mne.lng(), msw.lng()), Math.max(mne.lng(), msw.lng())])) {
-        return;
-    }
+    //if (!isCanvasContained(this.bounds, [Math.min(mne.lat(), msw.lat()), Math.max(mne.lat(), msw.lat()), Math.min(mne.lng(), msw.lng()), Math.max(mne.lng(), msw.lng())])) {
+    //    return;
+    //}
 
     /* if alpha = 0 that means nothing will be visible, so exit here
        is placed here as need to clean the canvas first always

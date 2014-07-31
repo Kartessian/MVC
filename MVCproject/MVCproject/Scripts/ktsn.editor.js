@@ -95,6 +95,8 @@
 
         _datasets: null,
 
+        _timer: null,
+
         init: function () {
             this._mapName = $("#ktsn-mapname");
 
@@ -140,13 +142,27 @@
                     );
                 });
                 ktsn.map._datasets = ds;
-                ktsn.busy(false);
+
+                ktsn.map._timer = setInterval(function () {
+                    var complete = true;
+                    $.each(ktsn.map._datasets, function (ix, dataset) {
+                        if (dataset.canvasLabels == null) {
+                            complete = false;
+                            return false;
+                        }
+                    });
+                    if (complete) {
+                        ktsn.busy(false);
+                        clearInterval(ktsn.map._timer);
+                    }
+                }, 100);
+
             });
         },
 
         loadDataset: function (dataset, ix) {
             $.post('/LoadDataset', { ds: dataset.id }, function (result) {
-                ktsn.map._datasets[ix].canvasLabels = new canvasLabels(ktsn.map._map, dataset.name, dataset.style, result);
+                ktsn.map._datasets[ix].canvasLabels = new canvasLabels(ktsn.map._map, dataset.name, dataset.style, result.data);
             });
         },
 
