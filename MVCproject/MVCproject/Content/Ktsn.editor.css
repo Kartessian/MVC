@@ -205,9 +205,8 @@ dd
     border: 1px solid #3c4e5a;
     border-radius: 2px;
     box-shadow: 0 0 15px #3c4e5a;
-    background: #fafafa;
+    background: #fafafa url(/images/watermark.png) no-repeat 16px bottom;
     margin: auto;
-    padding: 12px;
 }
 
 .dialog-icon {}
@@ -382,6 +381,10 @@ dd
     border-bottom:1px solid #ccc;
     padding:8px 16px 8px 38px;
     background:url(/images/klaus.png) no-repeat 4px 0;
+}
+
+.map-list li:hover {
+    background-color:#ffeecc;
 }
 
 .map-list li.selected {

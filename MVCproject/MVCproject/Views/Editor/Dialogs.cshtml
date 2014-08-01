@@ -1,11 +1,11 @@
 ﻿@model MVCproject.Default_Index
 <div id="ktsn-dialogs-user" class="dialog-window" data-action="UpdateAccount" data-type="form">
 
-    <div style="float: left; width: 90px;">
+    <div style="float: left; width: 90px; padding:12px;">
         <span class="dialog-icon sidebar-user">Account</span>
     </div>
 
-    <div style="float: left; border-left: 1px solid #ccc; padding: 0 0 0 12px; margin-left:12px; text-align: left;">
+    <div style="float: left; border-left: 1px solid #ccc; padding: 12px; text-align: left;">
         <dl>
             <dt>Name:</dt>
             <dd><input type="text" value="@Model.user.name" id="dlg-user-name"/></dd>
@@ -27,7 +27,7 @@
 
 <div id="ktsn-dialogs-my" class="dialog-window">
 
-    <div style="float: left; width: 90px;">
+    <div style="float: left; width: 90px; padding:12px;">
         <span class="dialog-icon sidebar-my">My Maps</span>
     </div>
 
@@ -40,7 +40,7 @@
             }
         </ul>
         </div>
-        <div style="text-align: right;">
+        <div style="text-align: right; border-top:1px solid #ccc; padding:12px;">
             <button class="bnLoad">Load</button>
             <button class="bnClose">Close</button>
         </div>
