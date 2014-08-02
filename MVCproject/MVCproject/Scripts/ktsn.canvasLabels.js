@@ -85,7 +85,6 @@ function canvasLabels(map, name, style, data) {
     }
 
     if (map != null) this.setMap(map);
-
 }
 
 canvasLabels.prototype.destroy = function () {
@@ -100,6 +99,8 @@ canvasLabels.prototype.destroy = function () {
         google.maps.event.removeListener(this.idleEvent_); // clear the idle event from the overlay
         this.idleEvent_ = null;
     }
+
+    this.map
 }
 
 canvasLabels.prototype.addSelected = function (geo) {
@@ -111,6 +112,7 @@ canvasLabels.prototype.cleanSelected = function () {
 }
 
 canvasLabels.prototype.onAdd = function () {
+    debugger;
     if (this.idleEvent_ == null) {
         this.idleEvent_ = google.maps.event.addListener(this.map, 'idle', idleHandler(this));
     }

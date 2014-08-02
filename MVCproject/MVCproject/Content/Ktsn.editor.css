@@ -457,6 +457,52 @@ input[type=checkbox].css-checkbox:checked + label {
     background-position: 0 -20px;
 }
 
+/* infobox */
+
+.infobox::after,.infobox::before {
+    content:'';
+    display:block;
+    position:absolute;
+    margin-left:-14px;
+    bottom:-14px;
+    left:50%;
+    width: 0; 
+	height: 0; 
+	border-left: 14px solid transparent;
+	border-right: 14px solid transparent;
+	border-top: 14px solid #ccc;
+}
+.infobox::after
+{
+    bottom:-12px;
+    margin-left:-12px;
+    border-left: 12px solid transparent;
+	border-right: 12px solid transparent;
+	border-top: 12px solid #fff;
+}
+
+.infobox
+{
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 4px;
+    position: relative;
+    margin-top: 8px;
+    background-color: #fff;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    min-height: 64px;
+    min-width:180px;
+}
+
+.infobox > div {
+}
+
+.infobox > img {
+    float:right;
+}
+
 /* nano scroller */
 /** initial setup **/
 .nano {

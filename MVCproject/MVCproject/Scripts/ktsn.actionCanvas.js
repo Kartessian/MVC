@@ -20,14 +20,13 @@ function invertColor(hexTripletColor) {
 actionCanvas.prototype = new google.maps.OverlayView();
 
 function actionCanvas(map) {
-    this.map_ = map;
     this.canvas_ = null;
     this.mousePos_ = null;
     this.matrix_ = [];
     if (map != null) this.setMap(map);
 }
 
-canvasLabels.prototype.destroy = function () {
+actionCanvas.prototype.destroy = function () {
     this.setMap(null);
     if (this.canvas_ != null) {
         this.canvas_.parentNode.removeChild(this.canvas_);
@@ -35,6 +34,10 @@ canvasLabels.prototype.destroy = function () {
     }
     this.mousePos_ = null;
     this.matrix_ = null;
+
+    if (this.infobox != null) {
+        this.infobox.setMap(null);
+    }
 }
 
 actionCanvas.prototype.onAdd = function () {
@@ -45,7 +48,7 @@ actionCanvas.prototype.onAdd = function () {
     t.getPanes().overlayMouseTarget.appendChild(canvas);
     t.point_ = null;
 
-    t.mousemove_ = google.maps.event.addListener(this.map_, 'mousemove', function (e) {
+    t.mousemove_ = google.maps.event.addListener(this.map, 'mousemove', function (e) {
         var isOver = 0, ds = ktsn.map._datasets
         // the datasets are ordered, so the top one will be the one with the higher index
         // so we go from the last one to the first one
@@ -65,13 +68,13 @@ actionCanvas.prototype.onAdd = function () {
         this.canClick = isOver;
     });
 
-    t.mouseclick_ = google.maps.event.addListener(this.map_, 'click', function (e) {
+    t.mouseclick_ = google.maps.event.addListener(this.map, 'click', function (e) {
         //find the closest point to its location
         if (this.canClick) {
             // mindist is the minimum distance we want to capture the event, squared (^2).
             // 100 = 10 pixels, 36 = 6 pixels, 25 = 5 pixels
             // the distance should be the point size to be sure the point is correctly found when clicked on it
-            var x = e.latLng.k, y = e.latLng.A, minDist = 10, point = null, overlay = null, ix = null,
+            var x = e.latLng.lat(), y = e.latLng.lng(), minDist = 100, point = null,
                 ds = ktsn.map._datasets;
 
             // use the layer we found we are hover of
@@ -84,8 +87,7 @@ actionCanvas.prototype.onAdd = function () {
                     if (dist < minDist) {
                         minDist = dist;
                         point = dPoint;
-                        ix = i;
-                        overlay = ds[i].canvasLabels;
+                        
                         // if the distance is 0, we cannot get closer
                         if (dist == 0) {
                             break;
@@ -96,10 +98,11 @@ actionCanvas.prototype.onAdd = function () {
 
             if (point != null) {
 
-                showPoint(ix, point, e.latLng);
-
-                var fillColor = drawing.invertColor(overlay.fillColor.hex),
+                var overlay = ds[this.canClick - 1].canvasLabels;
+                    fillColor = drawing.invertColor(overlay.fillColor.hex),
                     borderColor = drawing.invertColor(overlay.borderColor);
+
+                    t.showPoint(ds[this.canClick - 1].id, point, overlay.pointSize);
 
                 t.point_ = {
                     type: overlay.dotType,
@@ -130,7 +133,7 @@ actionCanvas.prototype.onAdd = function () {
 }
 
 actionCanvas.prototype.draw = function () {
-    var mapbounds = this.map_.getBounds(),
+    var mapbounds = this.map.getBounds(),
         projection = this.getProjection(),
         sw = projection.fromLatLngToDivPixel(mapbounds.getSouthWest()),
         ne = projection.fromLatLngToDivPixel(mapbounds.getNorthEast()),
@@ -140,8 +143,8 @@ actionCanvas.prototype.draw = function () {
     canvas.style.left = Math.round(sw.x) + 'px';
     canvas.style.top = Math.round(ne.y) + 'px';
     // width and height will be always same as container
-    canvas.height = this.map_.j.offsetHeight;
-    canvas.width = this.map_.j.offsetWidth;
+    canvas.height = this.map.j.offsetHeight;
+    canvas.width = this.map.j.offsetWidth;
 
     if (point != null) {
         //overlay for point
@@ -171,54 +174,38 @@ actionCanvas.prototype.onRemove = function () {
     }
 }
 
-function showPoint(ds, point, latlng) {
-    var dataset = ktsn.overlays[ds];
-
-    if (dataset.o.external_ === undefined) {
-        $.post('/GetPoint', { ds: dataset.ix, id: point.id }, function (result) {
-            var html = '';
-            if (typeof result == 'object') {
-                if (dataset.template != null) {
-                    html = dataset.template;
-                    $.each(result[0], function (name, value) {
-                        html = html.replace('{' + name + '}', value);
-                    });
-                } else {
-                    $.each(result[0], function (name, value) {
-                        html += '<p><b>' + name + '</b> ' + value + '</p>';
-                    });
-                }
-            } else {
-                html = result;
-            }
-
-            createInfoBox(html, point.geo, dataset.o.pointSize);
-        });
-    } else {
+actionCanvas.prototype.showPoint = function (ds, point, pointSize) {
+    var t = this;
+    $.post('/GetPoint', { ds: ds, point: point.id }, function (result) {
         var html = '';
-        if (dataset.template != null) {
-            html = dataset.template;
-            $.each(dataset.o.external_[point.id], function (name, value) {
-                html = html.replace('{' + name + '}', value);
-            });
+        if (typeof result == 'object') {
+            //if (dataset.template != null) {
+            //    html = dataset.template;
+            //    $.each(result[0], function (name, value) {
+            //        html = html.replace('{' + name + '}', value);
+            //    });
+            //} else {
+                $.each(result[0], function (name, value) {
+                    html += '<p><b>' + name + '</b> ' + value + '</p>';
+                });
+            //}
         } else {
-            $.each(dataset.o.external_[point.id], function (name, value) {
-                html += '<p><b>' + name + '</b> ' + value + '</p>';
-            });
+            html = result;
         }
-        createInfoBox(html, point.geo, dataset.o.pointSize);
-    }
+
+        t.createInfoBox(html, point.geo, pointSize);
+    });
 }
 
-function createInfoBox(html, location, yoffset) {
-    if (ktsn.infobox != null) {
-        ktsn.infobox.setMap(null);
+actionCanvas.prototype.createInfoBox = function(html, location, yoffset) {
+    if (this.infobox != null) {
+        this.infobox.setMap(null);
     }
 
     if (yoffset < 7) yoffset = 7;
     yoffset += 2;
 
-    ktsn.infobox = new InfoBox({
+    this.infobox = new InfoBox({
         boxClass: 'infobox',
         content: '<div>' + html + '</div>',
         position: location,
@@ -231,5 +218,5 @@ function createInfoBox(html, location, yoffset) {
         alignBottom: true
     });
 
-    ktsn.infobox.open(ktsn.map._map);
+    this.infobox.open(this.map);
 }
