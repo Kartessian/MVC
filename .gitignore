@@ -1,2 +1,4 @@
 bin
-debug
+obj
+*.suo
+*.user
