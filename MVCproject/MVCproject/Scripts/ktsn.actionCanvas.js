@@ -35,7 +35,7 @@ actionCanvas.prototype.onAdd = function () {
     t.getPanes().overlayMouseTarget.appendChild(canvas);
     t.point_ = null;
 
-    google.maps.event.addListener(this.map_, 'mousemove', function (e) {
+    t.mousemove_ = google.maps.event.addListener(this.map_, 'mousemove', function (e) {
         var isOver = 0, ds = ktsn.map._datasets
         // the datasets are ordered, so the top one will be the one with the higher index
         // so we go from the last one to the first one
@@ -55,7 +55,7 @@ actionCanvas.prototype.onAdd = function () {
         this.canClick = isOver;
     });
 
-    google.maps.event.addListener(this.map_, 'click', function (e) {
+    t.mouseclick_ = google.maps.event.addListener(this.map_, 'click', function (e) {
         //find the closest point to its location
         if (this.canClick) {
             // mindist is the minimum distance we want to capture the event, squared (^2).
@@ -150,6 +150,15 @@ actionCanvas.prototype.draw = function () {
 actionCanvas.prototype.onRemove = function () {
     this.canvas_.parentNode.removeChild(this.canvas_);
     this.canvas_ = null;
+    // clear events
+    if (this.mousemove_ != null) {
+        google.maps.event.removeListener(this.mousemove_);
+        this.mousemove_ = null;
+    }
+    if (this.mouseclick_ != null) {
+        google.maps.event.removeListener(this.mouseclick_);
+        this.mouseclick_ = null;
+    }
 }
 
 function showPoint(ds, point, latlng) {
