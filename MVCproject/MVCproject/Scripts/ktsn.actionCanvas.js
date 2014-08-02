@@ -27,6 +27,16 @@ function actionCanvas(map) {
     if (map != null) this.setMap(map);
 }
 
+canvasLabels.prototype.destroy = function () {
+    this.setMap(null);
+    if (this.canvas_ != null) {
+        this.canvas_.parentNode.removeChild(this.canvas_);
+        this.canvas_ = null;
+    }
+    this.mousePos_ = null;
+    this.matrix_ = null;
+}
+
 actionCanvas.prototype.onAdd = function () {
     var canvas = document.createElement('canvas'), t = this;
     canvas.style.position = "absolute";
@@ -130,8 +140,8 @@ actionCanvas.prototype.draw = function () {
     canvas.style.left = Math.round(sw.x) + 'px';
     canvas.style.top = Math.round(ne.y) + 'px';
     // width and height will be always same as container
-    canvas.height = ktsn.gmap.j.offsetHeight;
-    canvas.width = ktsn.gmap.j.offsetWidth;
+    canvas.height = this.map_.j.offsetHeight;
+    canvas.width = this.map_.j.offsetWidth;
 
     if (point != null) {
         //overlay for point
@@ -221,5 +231,5 @@ function createInfoBox(html, location, yoffset) {
         alignBottom: true
     });
 
-    ktsn.infobox.open(ktsn.gmap);
+    ktsn.infobox.open(ktsn.map._map);
 }

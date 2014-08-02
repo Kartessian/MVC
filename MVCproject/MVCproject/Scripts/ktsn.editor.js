@@ -127,6 +127,10 @@
                 });
                 ktsn.map._datasets = null;
             }
+            if (ktsn.map._actionCanvas != null) {
+                ktsn.map._actionCanvas.destroy();
+                ktsn.map._actionCanvas = null;
+            }
         },
 
         load: function (mapId) {
@@ -154,6 +158,7 @@
                     if (complete) {
                         ktsn.busy(false);
                         clearInterval(ktsn.map._timer);
+                        ktsn.map._actionCanvas = new actionCanvas(ktsn.map._map);
                     }
                 }, 100);
 
