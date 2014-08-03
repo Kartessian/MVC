@@ -17,8 +17,14 @@ namespace MVCproject.Controllers
 
         private void SetUserSession(List<UserMaps> userMaps, List<MapDataset> mapDatasets)
         {
-            Session[user_maps] = userMaps;
-            Session[user_datasets] = mapDatasets;
+            if (userMaps != null)
+            {
+                Session[user_maps] = userMaps;
+            }
+            if (mapDatasets != null)
+            {
+                Session[user_datasets] = mapDatasets;
+            }
         }
 
         private List<UserMaps> UserMaps()
@@ -78,15 +84,19 @@ namespace MVCproject.Controllers
 
 
         [HttpPost]
-        public JsonResult CreateMap(string Name)
+        public JsonResult CreateMap(string Name, string descr)
         {
             int mapId;
             using (Maps maps = new Maps(database))
             {
-                mapId = maps.Create(Name, string.Empty, user.id);
+                mapId = maps.Create(Name, descr, user.id);
+
+                // refresh the user session maps
+                SetUserSession(maps.UserMaps(user.id), null);
+
             }
 
-            return new JsonResult() { Data = mapId };
+            return new JsonResult() { Data = new { id = mapId, name = Name, created = DateTime.Today.ToString("MMM, dd yyyy") } };
         }
 
         [HttpPost][VerifyOwner]
@@ -139,7 +149,10 @@ namespace MVCproject.Controllers
         {
             using (Dataset dataset = new Dataset(database))
             {
-                
+
+
+                // refresh the user session datasets
+                SetUserSession(null, dataset.UserActiveList(user.id));
             }
             
             return null;

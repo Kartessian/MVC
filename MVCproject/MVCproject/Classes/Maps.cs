@@ -16,11 +16,36 @@ namespace MVCproject
 
         public int Create(string name, string description, int userId)
         {
-            return 0;
+            int id = 0;
+            try
+            {
+                database_.BeginTransaction();
+
+                string sSQL = "insert into maps (`name`,`createdon`,`access`,`category`,`description`) values (@name, NOW(), 'public', 1, @descr)";
+                database_.ExecuteSQL(sSQL,
+                        new KeyValuePair<string, object>("@name", name),
+                        new KeyValuePair<string, object>("@descr", description)
+                        );
+
+                id = (int)database_.ExecuteScalar("select id from maps order by id desc limit 1");
+
+                sSQL = "insert into `users_maps` (`user_id`,`map_id`,`relationship`,`createdon`) values (" + userId + "," + id + ",'owner',NOW())";
+                database_.ExecuteSQL(sSQL);
+
+                database_.Commit();
+            }
+            catch
+            {
+                database_.RollBack();
+            }
+            return id;
         }
 
         public void Delete(int mapId)
         {
+            database_.ExecuteSQL("delete from `maps` where id = " + mapId);
+            // todo --> check the FK to perform a cascade delete
+            database_.ExecuteSQL("delete from `users_maps` where `map_id` = " + mapId);
         }
 
         public void Update(int mapId, string newName, string newDescription)

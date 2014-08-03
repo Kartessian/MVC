@@ -55,6 +55,7 @@
             if (t._current) {
                 t._current.hide();
                 t._current.find(".bnClose,.bnSave,.bnLoad,.map-list li").off("click");
+                t._current.off("click");
                 t._current = null;
             }
             $(".nano").nanoScroller({ destroy: true });
@@ -62,6 +63,7 @@
         },
 
         show: function (name, type) {
+
             if (type == "popup") {
                 $("#ktsn-busy-background").show();
                 this._container.css("display", "table");
@@ -69,21 +71,40 @@
             } else {
                 this._current = $("#ktsn-dialogs-" + name).show();
             }
-            this._current.find(".bnClose").on("click", ktsn.dialogs.hide);
+
+            var current = this._current;
+
+            current.find(".bnClose").on("click", ktsn.dialogs.hide);
 
             switch (name) {
                 case "user":
-                    this._current.find(".bnSave").on("click", ktsn.dialogs._account_save)
+                    current.find(".bnSave").on("click", ktsn.dialogs._account_save)
                     break;
                 case "my":
-                    this._current.find(".map-list li").on("click", function (e) {
+                    current.on("click", ".map-list li", function (e) {
                         $(this).addClass("selected").siblings().removeClass("selected");
                     });
-                    this._current.find(".bnLoad").on("click", function (e) {
+                    current.find(".bnLoad").on("click", function (e) {
                         ktsn.map.load(
                             ktsn.dialogs._current.find(".map-list li.selected").data("id")
                         );
                         ktsn.dialogs.hide();
+                    });
+                    current.find(".bnCreate").on("click", function (e) {
+                        current.hide();
+                        var dialog = $("#ktsn-dialogs-new").css("display", "inline-block");
+                        dialog.find(".bnClose").on("click", function (e) {
+                            dialog.hide();
+                            current.css("display", "inline-block");
+                            $(this).off("click").siblings().off("click");
+                        });
+                        dialog.find(".bnSave").on("click", function (e) {
+                            var t = $(this);
+                            $.post("/CreateMap", { name: $("#map-name").val(), descr: $("#map-descr").val() }, function (result) {
+                                $("#map-list").append('<li data-id="' + result.id + '"><span class="public">' + result.name + '</span> <small>' + result.created + '</small></li>');
+                                t.siblings(".bnClose").click();
+                            });
+                        });
                     });
                     break;
                 case "style":
