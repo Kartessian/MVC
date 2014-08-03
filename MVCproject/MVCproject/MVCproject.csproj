@@ -197,6 +197,8 @@
     <Content Include="Scripts\ktsn.drawing.js" />
     <Content Include="Scripts\ktsn.canvasLabels.js" />
     <Content Include="Scripts\ktsn.editor.js" />
+    <Content Include="Scripts\ktsn.gm.canvas.js" />
+    <Content Include="Scripts\ktsn.lf.canvas.js" />
     <Content Include="Scripts\nano.js" />
     <Content Include="Scripts\nano.min.js">
       <DependentUpon>nano.js</DependentUpon>
