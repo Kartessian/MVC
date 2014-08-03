@@ -377,11 +377,17 @@ dd
     font-size: 12px;
 }
 
-.map-list li {
-    border-bottom:1px solid #ccc;
-    padding:8px 16px 8px 38px;
-    background:url(/images/klaus.png) no-repeat 4px 0;
-}
+    .map-list li
+    {
+        border-bottom: 1px solid #ccc;
+        padding: 8px 16px 8px 38px;
+        background: url(/images/klaus.png) no-repeat 4px 0;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+        cursor:pointer;
+    }
 
 .map-list li:hover {
     background-color:#ffeecc;

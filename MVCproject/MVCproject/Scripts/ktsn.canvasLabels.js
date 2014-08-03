@@ -112,7 +112,6 @@ canvasLabels.prototype.cleanSelected = function () {
 }
 
 canvasLabels.prototype.onAdd = function () {
-    debugger;
     if (this.idleEvent_ == null) {
         this.idleEvent_ = google.maps.event.addListener(this.map, 'idle', idleHandler(this));
     }

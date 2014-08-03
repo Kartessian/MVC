@@ -61,14 +61,17 @@
             $("#ktsn-busy-background").hide();
         },
 
-        show: function (name) {
-            $("#ktsn-busy-background").show();
-            this._container.css("display","table");
-            this._current = $("#ktsn-dialogs-" + name).css("display", "inline-block");
-
+        show: function (name, type) {
+            if (type == "popup") {
+                $("#ktsn-busy-background").show();
+                this._container.css("display", "table");
+                this._current = $("#ktsn-dialogs-" + name).css("display", "inline-block");
+            } else {
+                this._current = $("#ktsn-dialogs-" + name).show();
+            }
             this._current.find(".bnClose").on("click", ktsn.dialogs.hide);
 
-            switch(name) {
+            switch (name) {
                 case "user":
                     this._current.find(".bnSave").on("click", ktsn.dialogs._account_save)
                     break;
@@ -82,6 +85,12 @@
                         );
                         ktsn.dialogs.hide();
                     });
+                    break;
+                case "style":
+                    break;
+                case "layers":
+                    break;
+                case "share":
                     break;
             }
 
@@ -117,6 +126,8 @@
             };
 
             this._map = new google.maps.Map(document.getElementById("ktsn-map"), mapOptions);
+            // event listener for the sidebar zoom tool
+            google.maps.event.addListener(ktsn.map._map, 'zoom_changed', function () { $(".zoom-level").text(this.zoom); });
         },
 
         clean: function () {
@@ -162,6 +173,10 @@
                     }
                 }, 100);
 
+                ktsn.sidebar.style.show();
+                ktsn.sidebar.layers.show();
+                ktsn.sidebar.share.show();
+
             });
         },
 
@@ -184,7 +199,8 @@
     sidebar: {
 
         _sidebar_click: function () {
-            ktsn.dialogs.show($(this).data("dialog"));
+            var t = $(this);
+            ktsn.dialogs.show(t.data("dialog"), t.data("type"));
         },
 
         init: function () {
@@ -193,6 +209,17 @@
             this.style = $(".sidebar-style").on("click", this._sidebar_click);
             this.layers = $(".sidebar-layers").on("click", this._sidebar_click);
             this.share = $(".sidebar-share").on("click", this._sidebar_click);
+
+            $(".zoom-in").on("click", function () {
+                var z = ktsn.map._map.getZoom();
+                if (z < 20)
+                    ktsn.map._map.setZoom(z + 1);
+            });
+            $(".zoom-out").on("click", function () {
+                var z = ktsn.map._map.getZoom();
+                if (z > 1)
+                    ktsn.map._map.setZoom(z - 1);
+            });
 
             ktsn.dialogs.init();
         },
