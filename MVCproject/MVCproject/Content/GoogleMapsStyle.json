@@ -1,0 +1,162 @@
+﻿{
+	"features": {
+		"feature": [
+		  {
+		  	"name": "Administrative",
+		  	"key": "administrative",
+		  	"feature": [
+			  {
+			  	"name": "Country",
+			  	"key": "country"
+			  },
+			  {
+			  	"name": "Province",
+			  	"key": "province"
+			  },
+			  {
+			  	"name": "Localisty",
+			  	"key": "locality"
+			  },
+			  {
+			  	"name": "Neighborhood",
+			  	"key": "neighborhood"
+			  },
+			  {
+			  	"name": "Land parcel",
+			  	"key": "land_parcel"
+			  }
+		  	]
+		  },
+		  {
+		  	"name": "Landscape",
+		  	"key": "lanscape",
+		  	"feature": [
+			  {
+			  	"name": "Man made",
+			  	"key": "man_made"
+			  },
+			  {
+			  	"name": "Natural",
+			  	"key": "natural"
+			  }
+		  	]
+		  },
+		  {
+		  	"name": "Point of Interest",
+		  	"key": "poi"
+		  },
+		  {
+		  	"name": "Road",
+		  	"key": "road",
+		  	"feature": [
+			  {
+			  	"name": "Highway",
+			  	"key": "highway"
+			  },
+			  {
+			  	"name": "Arterial",
+			  	"key": "arterial"
+			  },
+			  {
+			  	"name": "Local",
+			  	"key": "local"
+			  }
+		  	]
+		  },
+		  {
+		  	"name": "Transit",
+		  	"key": "transit",
+		  	"feature": [
+			  {
+			  	"name": "Line",
+			  	"key": "line"
+			  },
+			  {
+			  	"name": "Station",
+			  	"key": "station"
+			  }
+		  	]
+		  },
+		  {
+		  	"name": "Water",
+		  	"key": "water"
+		  }
+		]
+	},
+    "elements": {
+    	"element": [
+		  {
+		  	"name": "Geometry",
+		  	"key": "geometry",
+		  	"element": [
+			  {
+			  	"name": "Fill",
+			  	"key": "fill"
+			  },
+			  {
+			  	"name": "Stroke",
+			  	"key": "stroke"
+			  }
+		  	]
+		  },
+		  {
+		  	"name": "Labels",
+		  	"key": "labels",
+		  	"element": [
+			  {
+			  	"name": "Text",
+			  	"key": "text"
+			  },
+			  {
+			  	"name": "Icon",
+			  	"key": "icon"
+			  }
+		  	]
+		  }
+    	]
+    },
+    "stylers": {
+    	"style": [
+		  {
+		  	"name": "hue",
+		  	"type": "RGBHexString"
+		  },
+		  {
+		  	"name": "lightness",
+		  	"type": "int",
+		  	"min": "100",
+		  	"max": "100"
+		  },
+		  {
+		  	"name": "saturation",
+		  	"type": "int",
+		  	"min": "100",
+		  	"max": "100"
+		  },
+		  {
+		  	"name": "gamma",
+		  	"type": "float",
+		  	"min": "0.01",
+		  	"max": "10"
+		  },
+		  {
+		  	"name": "inverse_lightness",
+		  	"type": "boolean"
+		  },
+		  {
+		  	"name": "visibility",
+		  	"type": "list",
+		  	"values": "on,off,simplified"
+		  },
+		  {
+		  	"name": "color",
+		  	"type": "RGBHexString"
+		  },
+		  {
+		  	"name": "weight",
+		  	"type": "int",
+		  	"min": "0"
+		  }
+    	]
+    }
+}

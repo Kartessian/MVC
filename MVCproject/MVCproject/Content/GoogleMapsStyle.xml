@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<styler>
+  <features>
+    <feature name="Administrative" key="administrative">
+      <feature name="Country" key="country"/>
+      <feature name="Province" key="province" />
+      <feature name="Localisty" key="locality" />
+      <feature name="Neighborhood" key="neighborhood" />
+      <feature name="Land parcel" key="land_parcel" />
+    </feature>
+    <feature name="Landscape" key="lanscape">
+      <feature name="Man made" key="man_made" />
+      <feature name="Natural" key="natural" />
+    </feature>
+    <feature name="Point of Interest" key="poi" />
+    <feature name="Road" key="road">
+      <feature name="Highway" key="highway" />
+      <feature name="Arterial" key="arterial" />
+      <feature name="Local" key="local" />
+    </feature>
+    <feature name="Transit" key="transit">
+      <feature name="Line" key="line" />
+      <feature name="Station" key="station" />
+    </feature>
+    <feature name="Water" key="water" />
+  </features>
+  <elements>
+    <element name="Geometry" key="geometry">
+      <element name="Fill" key="fill" />
+      <element name="Stroke" key="stroke" />
+    </element>
+    <element name="Labels" key="labels">
+      <element name="Text" key="text" />
+      <element name="Icon" key="icon" />
+    </element>
+  </elements>
+  <stylers>
+    <style name="hue" type="RGBHexString"/>
+    <style name="lightness" type="int" min="-100" max="100" />
+    <style name="saturation" type="int" min="-100" max="100" />
+    <style name="gamma" type="float" min="0.01" max="10"/>
+    <style name="inverse_lightness" type="boolean"/>
+    <style name="visibility" type="list" values="on,off,simplified" />
+    <style name="color" type="RGBHexString" />
+    <style name="weight" type="int" min="0" />
+  </stylers>
+</styler>

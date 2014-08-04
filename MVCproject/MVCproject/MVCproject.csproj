@@ -177,6 +177,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\fonts\fontawesome-webfont.svg" />
+    <Content Include="Content\GoogleMapsStyle.xml" />
     <Content Include="Content\Ktsn.editor.css" />
     <Content Include="Content\Ktsn.editor.min.css">
       <DependentUpon>Ktsn.editor.css</DependentUpon>
@@ -263,6 +264,9 @@
     <Content Include="Scripts\nano.min.js.map">
       <DependentUpon>nano.js</DependentUpon>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\GoogleMapsStyle.js" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
