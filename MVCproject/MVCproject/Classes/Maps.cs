@@ -67,6 +67,9 @@ namespace MVCproject
         public void Dispose()
         {
             database_ = null;
+
+            // http://msdn.microsoft.com/en-us/library/system.idisposable.dispose.aspx
+            GC.SuppressFinalize(this);
         }
     }
 }

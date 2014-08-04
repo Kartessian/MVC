@@ -20,9 +20,8 @@ namespace MVCproject
 
     }
 
-    public interface ICache
+    public interface ICache : IDisposable
     {
-
 
         void Add(ICacheObject cacheObject);
 

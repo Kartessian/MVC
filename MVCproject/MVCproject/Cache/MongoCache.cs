@@ -8,7 +8,7 @@ using MongoDB.Driver.Builders;
 
 namespace MVCproject
 {
-    public class MongoCache:ICache, IDisposable
+    public class MongoCache : ICache
     {
         private MongoClient mongo_;
         private MongoServer server_;
@@ -81,6 +81,7 @@ namespace MVCproject
         public void Dispose()
         {
             // Mongo driver takes care of the connection, so won't really be needed to do anything here...
+            GC.SuppressFinalize(this);
         }
     }
 

@@ -8,7 +8,7 @@ using System.Web;
 
 namespace MVCproject
 {
-    public class FileCache: ICache, IDisposable
+    public class FileCache: ICache
     {
 
         private string cachePath_;
@@ -101,7 +101,8 @@ namespace MVCproject
 
         public void Dispose()
         {
-            //so far there is no need to dispose anything...
+            //so far there is no need to dispose anything, but to match Interface 
+            GC.SuppressFinalize(this);
         }
 
         private bool isExpired(string file)

@@ -29,6 +29,9 @@ namespace MVCproject
                 _conn.Close();
             }
             _conn.Dispose();
+
+            // http://msdn.microsoft.com/en-us/library/system.idisposable.dispose.aspx
+            GC.SuppressFinalize(this);
         }
 
         public void BeginTransaction()
