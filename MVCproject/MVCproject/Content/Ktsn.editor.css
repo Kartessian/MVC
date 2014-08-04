@@ -106,7 +106,7 @@ dd
     position: fixed;
     top: 0;
     left: 100px;
-    width: 200px;
+    width: 400px;
     height: 100%;
     z-index: 2;
     background-color: #fff;
@@ -230,7 +230,6 @@ dd
 
 .side-window
 {
-
 }
 
 .sidebar-menu {
@@ -434,39 +433,69 @@ dd
     }
 
 
-input[type=checkbox].css-checkbox {
-	position: absolute; 
-    overflow: hidden; 
-    clip: rect(0 0 0 0); 
-    height:1px; 
-    width:1px; 
-    margin:-1px; 
+.item-list
+{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    background-color: #525252;
+    border:1px solid #3c4e5a;
+    overflow:hidden;
+    height:94px;
+}
+.item-list::after {
+    content:'';
+    display:block;
+    clear:both;
+}
+
+.item-list li {
+    margin:10px 6px;
     padding:0;
-    border:0;
+    border-radius:3px;
+    overflow:hidden;
+    width:80px;
+    height:70px;
+    float:left;
+    background-color:#fff;
+    font-size:10px;
+    text-align:center;
+    border:1px solid #3c4e5a;
 }
 
-input[type=checkbox].css-checkbox + label {
-	padding-left:22px;
-    height:20px; 
-	display:inline-block;
-	line-height:20px;
-	background-repeat:no-repeat;
-	background-position: 0 0;
-	vertical-align:middle;
-    cursor:pointer;
-    background-image:url(/images/klaus.png);
--webkit-touch-callout: none;
--webkit-user-select: none;
--khtml-user-select: none;
--moz-user-select: none;
--ms-user-select: none;
-user-select: none;
-margin-right:10px;
-}
 
-input[type=checkbox].css-checkbox:checked + label {
-    background-position: 0 -20px;
+
+    .item-list li.selected, .item-list li:hover
+    {
+        cursor: pointer;
+        border: 1px solid #3d99f5;
+        box-shadow:0 0 1px 2px #3d99f5;
+    }
+
+.option-list
+{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-top: 1px solid #f0f0f0;
 }
+    .option-list li {
+        width: 100%;
+        padding: 8px 5px;
+        line-height: 18px;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .option-list li input,.option-list li label {
+        float:right;
+    }
 
 /* infobox */
 
@@ -562,22 +591,57 @@ input[type=checkbox].css-checkbox:checked + label {
   opacity    : 0.99;
 }
 
-/* animated checkbox */
+
 /* Checboxes */
+/* static */
+input[type=checkbox].css-checkbox {
+	position: absolute; 
+    overflow: hidden; 
+    clip: rect(0 0 0 0); 
+    height:1px; 
+    width:1px; 
+    margin:-1px; 
+    padding:0;
+    border:0;
+}
+
+input[type=checkbox].css-checkbox + label {
+	padding-left:22px;
+    height:20px; 
+	display:inline-block;
+	line-height:20px;
+	background-repeat:no-repeat;
+	background-position: 0 0;
+	vertical-align:middle;
+    cursor:pointer;
+    background-image:url(/images/klaus.png);
+-webkit-touch-callout: none;
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+margin-right:10px;
+}
+
+input[type=checkbox].css-checkbox:checked + label {
+    background-position: 0 -20px;
+}
+
+/* animated checkbox */
  input[type="checkbox"].switch { /*  here acting as a filter for older browsers */
 	position: absolute;
 	opacity: 0;
 }
 
-    input[type="checkbox"].switch + label
-    {
+    input[type="checkbox"].switch + label {
         display: inline-block;
         vertical-align: middle;
         width: 3em;
         height: 1em;
         border: 1px solid rgba(0,0,0,.3);
         border-radius: 999px;
-        cursor:pointer;
+        cursor: pointer;
         margin: 0 .5em;
         background: white;
         background-image: linear-gradient(rgba(0,0,0,.1), transparent), linear-gradient(90deg, #3d99f5 50%, transparent 50%);
@@ -590,15 +654,19 @@ input[type=checkbox].css-checkbox:checked + label {
         -webkit-background-clip: border-box;
         background-clip: border-box;
         overflow: hidden;
-        -moz-transition-duration: .4s;
-        -o-transition-duration: .4s;
-        -webkit-transition-duration: .4s;
-        transition-duration: .4s;
+        -moz-transition-duration: .2s;
+        -o-transition-duration: .2s;
+        -webkit-transition-duration: .2s;
+        transition-duration: .2s;
         -moz-transition-property: padding, width, background-position, text-indent;
         -o-transition-property: padding, width, background-position, text-indent;
         -webkit-transition-property: padding, width, background-position, text-indent;
         transition-property: padding, width, background-position, text-indent;
         font-size: 14px; /* change this and see how they adjust! */
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
     }
 
  input[type="checkbox"].switch:checked + label {

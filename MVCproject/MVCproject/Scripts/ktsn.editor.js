@@ -115,7 +115,7 @@
                     break;
             }
 
-            $(".nano").nanoScroller({ alwaysVisible: true });
+            $(".nano:visible").nanoScroller({ alwaysVisible: true });
         }
     },
 
