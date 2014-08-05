@@ -31,6 +31,8 @@
             K._pane = pane;
 
             this._moveend = map.on('moveend', K._draw, this);
+            this._mousemove = map.on('mousemove', K._move, this);
+            this._click = map.on('click', K._click, this);
         },
 
         onRemove: function (map) {
@@ -41,6 +43,10 @@
             }
             map.off('moveend', K._draw, this);
             this._moveend = null;
+            map.off('mousemove', K._move, this);
+            this._mousemove = null;
+            map.off('click', K._move, this);
+            this._click = null;
         },
 
     }),
@@ -112,6 +118,20 @@
     },
 
     // private methods
+    _click: function (e) {
+        if (this._layerOver < 0) return;
+
+        var layer = K._layers[this._layerOver];
+
+        // find the closest point to the current location
+        // pending: try some other way to find the point without going through all the array
+        // maybe ordering the array in some way (like distance to 0,0) 
+        for (var i = 0, len = layer.points.length; i < len; i++) {
+            var geo = layer.points[i];
+            // to be continued ...
+        }
+
+    },
 
     _draw: function () {
 
@@ -170,6 +190,28 @@
             ctx.drawImage(hiddenCanvas, 0, 0);
         }
 
+    },
+
+    _move: function(e) {
+        var point = e.containerPoint,
+            layerOver = -1;
+        for (var layers = K._layers, i = layers.length - 1; i >= 0; i--) {
+            var canvas = layers[i]._canvas;
+            if (canvas != null) {
+                var color = canvas.getContext("2d").getImageData(point.x, point.y, 1, 1).data;
+                if (color[3] > 0) {
+                    layerOver = i;
+                    break;
+                }
+            }
+        }
+        // notice this is not being stored in the K object
+        this._layerOver = layerOver;
+        if (layerOver >= 0) {
+            e.target._container.style.cursor = "pointer";
+        } else {
+            e.target._container.style.cursor = null;
+        }
     },
 
     drawSimpleHeat: function (style, data, hiddenCanvas, mapbounds, overlayProjection, sw, ne, zoomlevel) {
