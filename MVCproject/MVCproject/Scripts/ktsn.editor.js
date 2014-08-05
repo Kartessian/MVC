@@ -54,21 +54,24 @@
             t._container.hide();
             if (t._current) {
                 t._current.hide();
-                t._current.find(".bnClose,.bnSave,.bnLoad,.map-list li").off("click");
+                t._current.find(".bnClose,.bnSave,.bnLoad,.map-list li,a").off("click");
                 t._current.off("click");
                 t._current = null;
             }
             $(".nano").nanoScroller({ destroy: true });
-            $("#ktsn-busy-background").hide();
+            $("#ktsn-busy-background,#ktsn-tools").hide();
         },
 
         show: function (name, type) {
+
+            ktsn.dialogs.hide();
 
             if (type == "popup") {
                 $("#ktsn-busy-background").show();
                 this._container.css("display", "table");
                 this._current = $("#ktsn-dialogs-" + name).css("display", "inline-block");
             } else {
+                $("#ktsn-tools").show();
                 this._current = $("#ktsn-dialogs-" + name).show();
             }
 
@@ -108,6 +111,10 @@
                     });
                     break;
                 case "style":
+                    current.find("a.pick-color").on("click", function (e) {
+                        e.preventDefault();
+                        alert("Not implemented yet!");
+                    });
                     break;
                 case "layers":
                     break;

@@ -41,6 +41,28 @@ body {
     font-family: "Open Sans", Sans-Serif;
     font-size: 14px;
 }
+
+h3
+{
+    margin: 0;
+}
+
+.right {float:right;}
+.left {float:left;}
+
+a.bnClose
+{
+    padding: 12px;
+    margin: 0;
+    background: url(/images/bn-close.png) no-repeat center center;
+    cursor: pointer;
+    opacity: .7;
+}
+a.bnClose:hover
+{
+    opacity: 1;
+}
+
 dl {
     font-size:12px
 }
@@ -114,7 +136,7 @@ dd
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
-    /*display:none;*/
+    display:none;
 }
 
 #ktsn-data
@@ -371,6 +393,11 @@ dd
     padding: 5px 0;
 }
 
+.pick-color {
+    padding:8px;
+    background:url(/images/colors.png) no-repeat center center;
+    float:right;
+}
 
 .map-list
 {
