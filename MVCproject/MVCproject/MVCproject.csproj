@@ -188,6 +188,7 @@
     </Content>
     <Content Include="Global.asax" />
     <Content Include="Images\back-pattern.png" />
+    <Content Include="Images\colors.png" />
     <Content Include="Images\kartessian.png" />
     <Content Include="Images\klaus.png" />
     <Content Include="Images\map_dark.png" />
