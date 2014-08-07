@@ -3,10 +3,6 @@ canvasLayer.prototype.draw = function () { };
 canvasLayer.prototype.onAdd = function () {
     var pane = this.getPanes().overlayLayer;
 
-    this._canvas = document.createElement("canvas");
-    this._canvas.style.position = 'absolute';
-    pane.appendChild(this._canvas);
-
     // add the canvas for each layer (if any)
     for (var i = 0, len = K._layers.length; i < len; i++) {
         var canvas = document.createElement("canvas");
@@ -85,11 +81,42 @@ window.K = {
         K._map = null;
     },
 
+    clean: function () {
+        for (var i = 0, len = K._layers.length; i < len; i++) {
+            K._pane.removeChild(K._layers[i]._canvas);
+        }
+        K._layers = [];
+    },
+
     removeLayer: function (layerId) {
         // remove the canvas from the pane
         this._pane.removeChild(this._layers[layerId]);
         // remove the layer from the array
         this._layers.splice(layerId, 1);
+    },
+
+    showInfoBox: function (html, geo, yoffset) {
+        if (this._infobox != null) {
+            this._infobox.setMap(null);
+        }
+
+        if (yoffset < 7) yoffset = 7;
+        yoffset += 12;
+
+        this._infobox = new InfoBox({
+            boxClass: 'infobox',
+            content: '<div>' + html + '</div>',
+            position: geo,
+            disableAutoPan: false,
+            pixelOffset: new google.maps.Size(0, yoffset),
+            zIndex: null,
+            closeBoxMargin: "12px 4px 2px 2px",
+            closeBoxURL: "http://www.google.com/intl/en_us/mapfiles/close.gif",
+            infoBoxClearance: new google.maps.Size(1, 1),
+            alignBottom: true
+        });
+
+        this._infobox.open(this._map);
     },
 
     // constructors
@@ -122,6 +149,17 @@ window.K = {
             }
             return this;
         };
+
+        this.onClick = function (point) {
+            // default handler for the click event
+            // will show an infobox with the available attributes
+            var html = '';
+            for (var prop in point) {
+                html += '<p><b>' + prop + ':</b> ' + point[prop] + '</p>';
+            }
+
+            K.showInfoBox(html, point.geo, this.style.pointSize/2);
+        };
     },
 
     Point: function (lat, lng, properties) {
@@ -137,19 +175,38 @@ window.K = {
     _click: function (e) {
         if (this._layerOver < 0) return;
 
-        var layer = K._layers[this._layerOver];
+        var layer = K._layers[this._layerOver],
+            x = e.latLng.lat(),
+            y = e.latLng.lng(),
+            minDist = layer.style.pointSize * layer.style.pointSize,
+            point = null;
 
         // find the closest point to the current location
-        // pending: try some other way to find the point without going through all the array
-        // maybe ordering the array in some way (like distance to 0,0) 
         for (var i = 0, len = layer.points.length; i < len; i++) {
-            var geo = layer.points[i];
-            // to be continued ...
+            var p = layer.points[i],
+                xpos = p.geo.lat(),
+                ypos = p.geo.lng(),
+                dist = (x - xpos) * (x - xpos) + (y - ypos) * (y - ypos);
+
+            if (dist < minDist) {
+                minDist = dist;
+                point = p;
+
+                // if the distance is 0, we cannot get closer
+                if (dist == 0) {
+                    break;
+                }
+            }
+        }
+
+        if (point != null) {
+            layer.onClick(point);
         }
 
     },
 
     _draw: function (t) {
+
         var overlayProjection = t.getProjection()
 
         if (overlayProjection === undefined) {

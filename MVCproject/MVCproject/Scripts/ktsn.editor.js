@@ -134,6 +134,8 @@
 
         _timer: null,
 
+        _canvas: null,
+
         init: function () {
             this._mapName = $("#ktsn-mapname");
 
@@ -156,20 +158,13 @@
             this._map = new google.maps.Map(document.getElementById("ktsn-map"), mapOptions);
             // event listener for the sidebar zoom tool
             google.maps.event.addListener(ktsn.map._map, 'zoom_changed', function () { $(".zoom-level").text(this.zoom); });
+
+            K.init({ map: this._map });
         },
 
         clean: function () {
-            if (ktsn.map._datasets != null) {
-                $.each(ktsn.map._datasets, function (ix, ds) {
-                    // remove the canvas layer
-                    ds.canvasLabels.destroy();
-                });
-                ktsn.map._datasets = null;
-            }
-            if (ktsn.map._actionCanvas != null) {
-                ktsn.map._actionCanvas.destroy();
-                ktsn.map._actionCanvas = null;
-            }
+            K.clean();
+            ktsn.map._datasets = null;
         },
 
         load: function (mapId) {
@@ -189,7 +184,7 @@
                 ktsn.map._timer = setInterval(function () {
                     var complete = true;
                     $.each(ktsn.map._datasets, function (ix, dataset) {
-                        if (dataset.canvasLabels == null) {
+                        if (dataset.canvasLayer == null) {
                             complete = false;
                             return false;
                         }
@@ -197,7 +192,6 @@
                     if (complete) {
                         ktsn.busy(false);
                         clearInterval(ktsn.map._timer);
-                        ktsn.map._actionCanvas = new actionCanvas(ktsn.map._map);
                     }
                 }, 100);
 
@@ -210,7 +204,24 @@
 
         loadDataset: function (dataset, ix) {
             $.post('/LoadDataset', { ds: dataset.id }, function (result) {
-                ktsn.map._datasets[ix].canvasLabels = new canvasLabels(ktsn.map._map, dataset.name, dataset.style, result.data);
+                //need to adapt the style to the proper style...
+                var layer = new K.Layer(dataset.name, {
+                    fillColor: drawing.hexToRgb(dataset.style.color1),
+                    borderColor: drawing.hexToRgb(dataset.style.color2),
+                    alpha: dataset.style.alpha,
+                    type: dataset.style.type,
+                    pointSize: dataset.style.size
+                });
+
+                for (var i = 0, data = result.data, len = data.length; i < len; i++) {
+                    var point = data[i];
+                    layer.addPoint(new K.Point(point[1], point[2], { id: point[0] }));
+                }
+
+                //use default click for now
+                //layer.onClick = function (point) {};
+
+                ktsn.map._datasets[ix].canvasLayer = K.addLayer(layer);
             });
         },
 
