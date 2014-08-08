@@ -243,11 +243,12 @@
         },
 
         init: function () {
-            this.style = $(".sidebar-user").on("click", this._sidebar_click);
-            this.maps = $(".sidebar-my").on("click", this._sidebar_click);
-            this.style = $(".sidebar-style").on("click", this._sidebar_click);
-            this.layers = $(".sidebar-layers").on("click", this._sidebar_click);
-            this.share = $(".sidebar-share").on("click", this._sidebar_click);
+            var menu = $("#ktsn-menu");
+            this.style = menu.find(".sidebar-user").on("click", this._sidebar_click);
+            this.maps = menu.find(".sidebar-my").on("click", this._sidebar_click);
+            this.style = menu.find(".sidebar-style").on("click", this._sidebar_click);
+            this.layers = menu.find(".sidebar-layers").on("click", this._sidebar_click);
+            this.share = menu.find(".sidebar-share").on("click", this._sidebar_click);
 
             $(".zoom-in").on("click", function () {
                 var z = ktsn.map._map.getZoom();
