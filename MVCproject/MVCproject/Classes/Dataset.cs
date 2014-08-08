@@ -88,6 +88,11 @@ namespace MVCproject
 
         }
 
+        public MapDataset Find(int DatasetId)
+        {
+            return database_.GetRecords<MapDataset>(new KeyValuePair<string, object>("id", DatasetId)).FirstOrDefault();
+        }
+
         /// <summary>
         /// Deletes the specified dataset. It will also drop the table that contains the data
         /// </summary>
@@ -224,6 +229,20 @@ namespace MVCproject
         public DataTable GetPoint(string tmpTable, int point)
         {
             return database_.GetDataTable("select * from `datasets`.`" + tmpTable + "` where id = @id", new KeyValuePair<string, object>("@id", point));
+        }
+
+
+        /// <summary>
+        /// Returns the points contained in the specified region
+        /// </summary>
+        public DataTable FindPoints(string tmpTable, string latColumn, string lngColumn,  double minLat, double maxLat, double minLng, double maxLng)
+        {
+            return database_.GetDataTable("select id,`" + latColumn + "` as lat,`" + lngColumn + "` as lng from `datasets`.`" + tmpTable + "` where `" + latColumn + "` between @minLat and @maxLat and `" + lngColumn + "` between @minLng and @maxLng",
+                                new KeyValuePair<string, object>("@minLat", minLat),
+                                new KeyValuePair<string, object>("@maxLat", maxLat),
+                                new KeyValuePair<string, object>("@minLng", minLng),
+                                new KeyValuePair<string, object>("@maxLng", maxLng)
+                );
         }
 
         public void Dispose()

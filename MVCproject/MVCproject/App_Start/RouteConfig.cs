@@ -30,6 +30,12 @@ namespace MVCproject
                 url: "embed/{action}/{id}",
                 defaults: new { controller = "Embed", action = "GoogleMaps", id = UrlParameter.Optional }
             );
+
+            routes.MapRoute(
+                name: "Tiles",
+                url: "tiles/{x}/{y}/{z}/{id}",
+                defaults: new { controller = "Tiles", action = "Tile", x = UrlParameter.Optional, y = UrlParameter.Optional, z = UrlParameter.Optional, id = UrlParameter.Optional }
+            );
         }
     }
 }

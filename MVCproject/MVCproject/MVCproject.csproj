@@ -153,12 +153,15 @@
     <Compile Include="Classes\Dataset.cs" />
     <Compile Include="Classes\Extensions.cs" />
     <Compile Include="Classes\Converters\IConverter.cs" />
+    <Compile Include="Classes\Geo\geoTile.cs" />
+    <Compile Include="Classes\Geo\MemoryStrem.cs" />
     <Compile Include="Classes\Helpers.cs" />
     <Compile Include="Classes\Maps.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\EditorController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\EmbedController.cs" />
+    <Compile Include="Controllers\TilesController.cs" />
     <Compile Include="Database\Database.cs" />
     <Compile Include="Database\DatasetStyle.cs" />
     <Compile Include="Database\ITable.cs" />
@@ -202,6 +205,7 @@
     <Content Include="Images\preloader.gif" />
     <Content Include="Images\sidebar.mini.png" />
     <Content Include="Images\sidebar.png" />
+    <Content Include="Scripts\demo.html" />
     <Content Include="Scripts\infobox.js" />
     <Content Include="Scripts\ktsn.actionCanvas.js" />
     <Content Include="Scripts\ktsn.drawing.js" />

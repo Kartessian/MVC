@@ -51,7 +51,6 @@ namespace MVCproject.Controllers
             }
         }
 
-
         [HttpGet]
         public ActionResult Index()
         {
