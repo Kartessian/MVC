@@ -36,6 +36,7 @@ canvasLayer.prototype.onRemove = function () {
     this._click = null;
 
 };
+
 function canvasLayer(map) {
     this.setMap(map);
 }
@@ -45,6 +46,30 @@ function handler(t, fn) {
         fn(t);
     }
 }
+
+function getNormalizedCoord(coord, zoom) {
+    var y = coord.y;
+    var x = coord.x;
+
+    // tile range in one direction range is dependent on zoom level
+    // 0 = 1 tile, 1 = 2 tiles, 2 = 4 tiles, 3 = 8 tiles, etc
+    var tileRange = 1 << zoom;
+
+    // don't repeat across y-axis (vertically)
+    if (y < 0 || y >= tileRange) {
+        return null;
+    }
+
+    // repeat across x-axis
+    if (x < 0 || x >= tileRange) {
+        x = (x % tileRange + tileRange) % tileRange;
+    }
+
+    return {
+        x: x,
+        y: y
+    };
+};
 
 window.K = {
     init: function (options) {
@@ -56,6 +81,7 @@ window.K = {
 
         this._pane = null;
         this._layers = [];
+        this._tiles = [];
 
         this._base = new canvasLayer(this._map);
 
@@ -71,6 +97,15 @@ window.K = {
         google.maps.event.trigger(this._map, 'idle');
 
         return this._layers.length;
+    },
+
+    // experimental
+    addTile: function(tile) {
+        this._tiles.push(tile);
+
+        this._map.overlayMapTypes.insertAt(0, tile);
+
+        return this._tiles.length;
     },
 
     destroy: function () {
@@ -93,6 +128,16 @@ window.K = {
         this._pane.removeChild(this._layers[layerId]);
         // remove the layer from the array
         this._layers.splice(layerId, 1);
+    },
+
+    // experimental
+    removetile: function (tileId) {
+
+        // remove the tile
+        this._map.overlayMapTypes.removeAt(ix);
+
+        // remove the layer from the array
+        this._tiles.splice(tileId, 1);
     },
 
     showInfoBox: function (html, geo, yoffset) {
@@ -125,6 +170,7 @@ window.K = {
         this.points = [];
         this.style = style;
         this.visible = true;
+        this.type = 'layer';
 
         this.name = name;
 
@@ -160,6 +206,22 @@ window.K = {
 
             K.showInfoBox(html, point.geo, this.style.pointSize/2);
         };
+    },
+
+    // experimental -- the tiles should be loaded in the canvas...
+    // instead of using the maptype functionallity of google maps 
+    Tile: function (tileName, ds) {
+        var tile = new google.maps.ImageMapType({
+            getTileUrl: function (coord, zoom) {
+                coord = getNormalizedCoord(coord, zoom);
+                return '/tiles/' + zoom + '/' + coord.x + '/' + coord.y + '/' + ds;
+            },
+            tileSize: new google.maps.Size(256, 256),
+            name: name
+        });
+        tile.type = 'tile';
+
+        return tile;
     },
 
     Point: function (lat, lng, properties) {

@@ -82,7 +82,7 @@ namespace MVCproject
             bounds = getBounds(0);
         }
 
-        public void setPoints(geo[] points)
+        public void setPoints(ref geo[] points)
         {
             this.points = points;
         }

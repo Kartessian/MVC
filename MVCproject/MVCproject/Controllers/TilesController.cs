@@ -11,22 +11,32 @@ namespace MVCproject.Controllers
     public class TilesController : BaseController
     {
 
-        public FileContentResult Tile(int x, int y, int z, int id)
+        // cache the tile in the client
+        [OutputCache(Duration = 360000, Location = System.Web.UI.OutputCacheLocation.Client, VaryByParam = "x,y,z,id")]
+        public FileContentResult Tile(int x, int y, int z, int id, int map)
         {
 
             geoTile tile = new geoTile(x, y, z);
+            int size = 10;
+            Color borderColor, fillColor;
             DataTable points;
             string latCol, lngCol;
 
             using (Dataset dataset = new Dataset(database))
             {
-                MapDataset ds = dataset.Find(id);
+                // find the dataset with the style for the specified map
+                MapDataset ds = dataset.Find(id, map);
+                size = ds.style.size;
+                borderColor = System.Drawing.ColorTranslator.FromHtml(ds.style.color1);
+                fillColor = System.Drawing.ColorTranslator.FromHtml(ds.style.color2);
+
+                var bounds = tile.getBounds(1);
 
                 latCol = ds.latColumn;
                 lngCol = ds.lngColumn;
 
                 // retrieve the points for the selected tile only
-                points = dataset.FindPoints(ds.tmpTable, ds.latColumn, ds.lngColumn, tile.bounds.minLat, tile.bounds.maxLat, tile.bounds.minLng, tile.bounds.maxLng);
+                points = dataset.FindPoints(ds.tmpTable, ds.latColumn, ds.lngColumn, bounds.minLat, bounds.maxLat, bounds.minLng, bounds.maxLng);
             }
 
             var geoPoints = new geoTile.geo[points.Rows.Count];
@@ -38,9 +48,9 @@ namespace MVCproject.Controllers
                 cnt++;
             }
 
-            tile.setPoints(geoPoints);
+            tile.setPoints(ref geoPoints);
 
-            var bytes = tile.renderTile(Color.Yellow, Color.Red, 11, 255);
+            var bytes = tile.renderTile(borderColor, fillColor, size, 255);
 
             return new FileContentResult(bytes, "image/png");
         }

@@ -33,8 +33,8 @@ namespace MVCproject
 
             routes.MapRoute(
                 name: "Tiles",
-                url: "tiles/{x}/{y}/{z}/{id}",
-                defaults: new { controller = "Tiles", action = "Tile", x = UrlParameter.Optional, y = UrlParameter.Optional, z = UrlParameter.Optional, id = UrlParameter.Optional }
+                url: "tiles/{z}/{x}/{y}/{id}/{map}",
+                defaults: new { controller = "Tiles", action = "Tile", z = UrlParameter.Optional, x = UrlParameter.Optional, y = UrlParameter.Optional, id = UrlParameter.Optional, map = UrlParameter.Optional }
             );
         }
     }

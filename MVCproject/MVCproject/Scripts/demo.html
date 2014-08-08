@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>MapCanvas DEMO</title>
+
+<!--<script src='https://api.tiles.mapbox.com/mapbox.js/v2.0.0/mapbox.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox.js/v2.0.0/mapbox.css' rel='stylesheet' />-->
+    <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyDXwM_tdKAXh_45OQpzmeV4wCCtrbCwWNs&sensor=false"></script>
+    <script src="ktsn.gm.canvas.js"></script>
+    <script src="ktsn.drawing.js"></script>
+</head>
+<body>
+
+    <div id="myMap" style="width:800px; height:600px"></div>
+
+    <script>
+
+        window.onload = function () {
+
+            //K.init({ div: 'myMap', key: 'jachaos.iajphb4n', token: 'pk.eyJ1IjoiamFjaGFvcyIsImEiOiJrUV80TG1JIn0.6ylAuHZh3GOpdcQGGLEbnA' });
+            var mapOptions = {
+                center: new google.maps.LatLng(37.72658651203338, 264.55766830232244)
+            , zoom: 4
+            , mapTypeId: google.maps.MapTypeId.ROADMAP
+            , mapTypeControl: false
+            , streetViewControl: false
+            , panControl: false
+            , zoomControl: false
+            , minZoom: 1
+            };
+
+            K.init({ map: new google.maps.Map(document.getElementById("myMap"), mapOptions) });
+
+            var newLayer = new K.Layer("name", { type: 'simpleheat', alpha: 255, fillColor: { hex: '#ff0000', r: 255, g: 0, b: 0 }, borderColor: { hex: '#ff0000', r: 255, g: 0, b: 0 }, pointSize: 7 }).set({ "visible": true });
+            
+            for (var i = -80; i < 80; i++) {
+                for (var j = -80; j < 80; j++) {
+                    newLayer.addPoint(new K.Point(i, j, null));
+                }
+            }
+
+            //K.addLayer(newLayer);
+
+            var newTile = K.Tile("name", 7);
+
+            K.addTile(newTile);
+            //newLayer = new K.Layer("name", { type: 'gradient', alpha: 255, fillColor: { hex: '#00ff00', r: 0, g: 255, b: 0 }, borderColor: { hex: '#00ff00', r: 0, g: 255, b: 0 }, pointSize: 3 }).set({ "visible": true });
+
+            //for (var i = -80.5; i < 80; i++) {
+            //    for (var j = -80.5; j < 80; j++) {
+            //        newLayer.addPoint(new K.Point(i, j, null));
+            //    }
+            //}
+
+            //K.addLayer(newLayer);
+        }
+    </script>
+
+</body>
+</html>

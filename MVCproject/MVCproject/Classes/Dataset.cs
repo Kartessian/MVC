@@ -93,6 +93,17 @@ namespace MVCproject
             return database_.GetRecords<MapDataset>(new KeyValuePair<string, object>("id", DatasetId)).FirstOrDefault();
         }
 
+        public MapDataset Find(int DatasetId, int mapId)
+        {
+            MapDataset dataset = database_.GetRecords<MapDataset>(new KeyValuePair<string, object>("id", DatasetId)).FirstOrDefault();
+            dataset.style = database_.GetRecords<DatasetStyle>(
+                    new KeyValuePair<string, object>("@map_id", mapId),
+                    new KeyValuePair<string, object>("@dataset_id", dataset.id)
+                    ).FirstOrDefault();
+
+            return dataset;
+        }
+
         /// <summary>
         /// Deletes the specified dataset. It will also drop the table that contains the data
         /// </summary>
