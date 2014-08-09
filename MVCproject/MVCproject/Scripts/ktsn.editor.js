@@ -2,6 +2,30 @@
 
     init: function () {
 
+        // ajax setup initialization
+        // this is used to cancel all pending ajax request 
+        // if the stop() function is called. Intended to be used
+        // when the user performs an action before other action
+        // that is awaiting ajax calls is being executed, so it
+        // will cancel all pending ajax calls.
+        this._ajaxPool = [];
+        $.ajaxSetup({
+            beforeSend: function (jqXHR) {
+                // add the call to the pool array
+                ktsn._ajaxPool.push(jqXHR);
+            },
+            complete: function (jqXHR) {
+                // try to find the call in the array
+                var index = ktsn._ajaxPool.indexOf(jqXHR);
+                // if it's there, remove from the array
+                if (index > -1) {
+                    ktsn._ajaxPool.splice(index, 1);
+                }
+            }
+        });
+
+
+
         this.sidebar.init();
         this.map.init();
         
@@ -88,9 +112,11 @@
                         $(this).addClass("selected").siblings().removeClass("selected");
                     });
                     current.find(".bnLoad").on("click", function (e) {
+                        var selected = ktsn.dialogs._current.find(".map-list li.selected");
                         ktsn.map.load(
-                            ktsn.dialogs._current.find(".map-list li.selected").data("id")
+                            selected.data("id")
                         );
+                        ktsn.map.name(selected.find("span").text());
                         ktsn.dialogs.hide();
                     });
                     current.find(".bnCreate").on("click", function (e) {
@@ -165,6 +191,7 @@
         clean: function () {
             K.clean();
             ktsn.map._datasets = null;
+            ktsn.map.name("Kartessian Map Editor");
         },
 
         load: function (mapId) {
@@ -269,5 +296,13 @@
         maps: null,
         share: null,
         style: null
+    },
+
+    // cancel all pending ajax calls
+    stopAjax: function () {
+        $(this._ajaxPool).each(function (idx, jqXHR) {
+            jqXHR.abort();
+        });
+        this._ajaxPool = [];
     }
 }
