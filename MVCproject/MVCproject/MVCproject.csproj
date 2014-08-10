@@ -182,6 +182,9 @@
     <Content Include="Content\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\GoogleMapsStyle.xml" />
     <Content Include="Content\Ktsn.editor.css" />
+    <Content Include="Content\Ktsn.editor.min.css">
+      <DependentUpon>Ktsn.editor.css</DependentUpon>
+    </Content>
     <Content Include="Content\Ktsn.login.css" />
     <Content Include="Content\Ktsn.login.min.css">
       <DependentUpon>Ktsn.login.css</DependentUpon>
@@ -200,6 +203,7 @@
     <Content Include="Images\map_satellite.png" />
     <Content Include="Images\map_sepia.png" />
     <Content Include="Images\map_terrain.png" />
+    <Content Include="Images\preloader-white.gif" />
     <Content Include="Images\preloader.gif" />
     <Content Include="Images\sidebar.mini.png" />
     <Content Include="Images\sidebar.png" />

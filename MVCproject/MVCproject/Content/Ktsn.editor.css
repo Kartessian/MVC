@@ -42,7 +42,7 @@ body {
     font-size: 14px;
 }
 
-H3
+h3
 {
     margin: 5px 0 10px 0;
     padding: 0;
@@ -50,8 +50,65 @@ H3
     font-weight: 600;
 }
 
+h3 small {
+    color:#525252;
+    font-style:italic;
+    font-weight:400;
+    font-size:16px;
+}
+
+button {
+    border-radius:2px;
+    padding: 0 8px;
+    height:24px;
+    line-height:24px;
+    text-align:center;
+    min-width:50px;
+    background-color: #ccc;
+    border: 1px solid #bbb;
+    color: #333;
+    text-shadow: 0px 1px rgba(140,140,140,0.1);
+    cursor:pointer;
+    outline:none;
+    font-size:12px;
+    margin:0 6px;
+}
+
+    button:hover
+    {
+        background:#aaa;
+        border: 1px solid #a2a2a8;
+    }
+
+    button:active
+    {
+        background-color: #999;
+        border: 1px solid #929298;
+    }
+
 .right {float:right;}
 .left {float:left;}
+.hidden {display:none;}
+
+.bnCreate, .bnSave {
+    background:#d14836;
+    color:#fff;
+    text-shadow: 0px 1px rgba(0,0,0,0.1);
+    border:1px solid #b0281a
+}
+.bnCreate:hover, .bnSave:hover {
+    background:#c53727;
+    border: 1px solid #af301f;
+}
+.bnCreate:active, .bnSave:active {
+    background-color: #b0281a;
+    border: 1px solid #992a1b;
+}
+.bnCreate::before {
+    content:'\f067';
+    font-family:FontAwesome;
+    margin-right:4px;
+}
 
 a.bnClose
 {
@@ -265,6 +322,7 @@ dd
     margin: 0;
     padding: 0;
     width: 100%;
+    font-size:12px;
 }
 
     .sidebar-menu li {
@@ -485,11 +543,6 @@ dd
         display:inline-block;
     }
 
-    .option-list li input,.option-list li label {
-        float:right;
-    }
-
-
 .item-list
 {
     list-style: none;
@@ -553,6 +606,65 @@ dd
     .option-list li input,.option-list li label {
         float:right;
     }
+
+
+/* layer list style and buttons */
+
+.ds-load {
+    color:#525225;
+}
+.ds-load::before {
+    content:'';
+    background:url(/images/preloader-white.gif) no-repeat center center;
+    padding:8px;
+    margin-right:4px;
+}
+
+.bn-icon-delete,.bn-icon-data, .bn-icon-edit,.bn-icon-math,.bn-icon-style {
+    font-family:FontAwesome;
+    text-decoration:none;
+    color:#525252;
+    margin-left:4px;
+    font-size:14px;
+    border:1px solid transparent;
+    border-radius:2px;
+    display:inline-block;
+    text-align:center;
+    width:16px;
+}
+
+    .bn-icon-delete:hover,.bn-icon-data:hover,.bn-icon-edit:hover,.bn-icon-math:hover,.bn-icon-style:hover
+    {
+        color:#fff;
+        text-shadow:0 0 1px rgba(200,200,200,.2);
+        border:1px solid #525252;
+        background-color:#525252;
+    }
+
+.bn-icon-delete::before {
+    content:'\f014';
+    display:block;
+}
+
+.bn-icon-data::before {
+    content:'\f00a';
+    display:block;
+}
+
+.bn-icon-style::before {
+    content:'\f1de';
+    display:block;
+}
+
+.bn-icon-edit::before {
+    content:'\f040';
+    display:block;
+}
+
+.bn-icon-math::before {
+    content:'\f12b';
+    display:block;
+}
 
 /* infobox */
 

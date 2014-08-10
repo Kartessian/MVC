@@ -1,4 +1,10 @@
-﻿var ktsn = {
+﻿Number.prototype.formatMoney = function (decPlaces, thouSeparator, decSeparator) {
+    var n = this, decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces, decSeparator = decSeparator == undefined ? "." : decSeparator, thouSeparator = thouSeparator == undefined ? "," : thouSeparator, sign = n < 0 ? "-" : "", i = parseInt(n = Math.abs(+n || 0).toFixed(decPlaces)) + "", j = (j = i.length) > 3 ? j % 3 : 0;
+    return sign + (j ? i.substr(0, j) + thouSeparator : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator) + (decPlaces ? decSeparator + Math.abs(n - i).toFixed(decPlaces).slice(2) : "");
+};
+
+
+var ktsn = {
 
     init: function () {
 
@@ -98,8 +104,8 @@
                 this._container.css("display", "table");
                 this._current = $("#ktsn-dialogs-" + name).css("display", "inline-block");
             } else {
-                $("#ktsn-tools").show().animate({ "width": width }, 100);
                 this._current = $("#ktsn-dialogs-" + name).show().addClass("nano-content");
+                $("#ktsn-tools").show(); //.animate({ "width": width }, 100);
                 option.addClass("selected");
             }
 
@@ -120,13 +126,17 @@
                         ktsn.dialogs.hide();
                     });
                     current.find(".bnCreate").on("click", function (e) {
-                        current.hide();
                         var dialog = $("#ktsn-dialogs-new").css("display", "inline-block");
+                        $("#ktsn-busy-background").show();
+                        ktsn.dialogs._container.css("display", "table");
+
                         dialog.find(".bnClose").on("click", function (e) {
+                            ktsn.dialogs._container.hide();
                             dialog.hide();
-                            current.css("display", "inline-block");
+                            $("#ktsn-busy-background").hide();
                             $(this).off("click").siblings().off("click");
                         });
+
                         dialog.find(".bnSave").on("click", function (e) {
                             var t = $(this);
                             $.post("/CreateMap", { name: $("#map-name").val(), descr: $("#map-descr").val() }, function (result) {
@@ -192,6 +202,8 @@
             K.clean();
             ktsn.map._datasets = null;
             ktsn.map.name("Kartessian Map Editor");
+
+            $("#ktsn-layer-list").empty();
         },
 
         load: function (mapId) {
@@ -230,6 +242,18 @@
         },
 
         loadDataset: function (dataset, ix) {
+
+            var template = $('<li data-id="' + dataset.id + '" data-ix="' + ix + '"><span>' + dataset.name + '</span>' +
+                '<div class="ds-load">loading...</div><div class="hidden">' +
+                '<a href="#" class="bn-icon-delete right" title="Delete Dataset"></a>' +
+                '<a href="#" class="bn-icon-data right" title="View Data"></a>' +
+                '<a href="#" class="bn-icon-edit right" title="Edit Layer"></a>' +
+                '<a href="#" class="bn-icon-math right" title="Functions"></a>' +
+                '<div class="right"><input type="checkbox" ' + (dataset.visible ? "checked" : "") + ' class="switch" id="ckb-' + dataset.id + '" /><label for="ckb-' + dataset.id + '"></label></div>' +
+                '<small>0</small></div></li>');
+
+            $("#ktsn-layer-list").append(template);
+
             $.post('/LoadDataset', { ds: dataset.id }, function (result) {
                 //need to adapt the style to the proper style...
                 var layer = new K.Layer(dataset.name, {
