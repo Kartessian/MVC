@@ -75,18 +75,21 @@
 
         hide: function () {
             var t = ktsn.dialogs;
+            $(".nano:visible").nanoScroller({ destroy: true });
             t._container.hide();
             if (t._current) {
-                t._current.hide();
+                t._current.hide().removeClass("nano-content");
                 t._current.find(".bnClose,.bnSave,.bnLoad,.map-list li,a").off("click");
                 t._current.off("click");
                 t._current = null;
             }
-            $(".nano").nanoScroller({ destroy: true });
             $("#ktsn-busy-background,#ktsn-tools").hide();
+            $("#ktsn-menu .selected").removeClass("selected");
         },
 
-        show: function (name, type) {
+        show: function (option) {
+
+            var name = option.data("dialog"), type = option.data("type"), width = option.data("width");
 
             ktsn.dialogs.hide();
 
@@ -95,8 +98,9 @@
                 this._container.css("display", "table");
                 this._current = $("#ktsn-dialogs-" + name).css("display", "inline-block");
             } else {
-                $("#ktsn-tools").show();
-                this._current = $("#ktsn-dialogs-" + name).show();
+                $("#ktsn-tools").show().animate({ "width": width }, 100);
+                this._current = $("#ktsn-dialogs-" + name).show().addClass("nano-content");
+                option.addClass("selected");
             }
 
             var current = this._current;
@@ -109,14 +113,10 @@
                     break;
                 case "my":
                     current.on("click", ".map-list li", function (e) {
-                        $(this).addClass("selected").siblings().removeClass("selected");
-                    });
-                    current.find(".bnLoad").on("click", function (e) {
-                        var selected = ktsn.dialogs._current.find(".map-list li.selected");
-                        ktsn.map.load(
-                            selected.data("id")
-                        );
-                        ktsn.map.name(selected.find("span").text());
+                        var t = $(this);
+                        t.addClass("selected").siblings().removeClass("selected");
+                        ktsn.map.load(t.data("id"));
+                        ktsn.map.name(t.find("span").text());
                         ktsn.dialogs.hide();
                     });
                     current.find(".bnCreate").on("click", function (e) {
@@ -148,7 +148,7 @@
                     break;
             }
 
-            $(".nano:visible").nanoScroller({ alwaysVisible: true });
+            $(".nano:visible").nanoScroller({ alwaysVisible: true }, true);
         }
     },
 
@@ -265,8 +265,7 @@
     sidebar: {
 
         _sidebar_click: function () {
-            var t = $(this);
-            ktsn.dialogs.show(t.data("dialog"), t.data("type"));
+            ktsn.dialogs.show($(this));
         },
 
         init: function () {

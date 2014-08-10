@@ -42,9 +42,12 @@ body {
     font-size: 14px;
 }
 
-h3
+H3
 {
-    margin: 0;
+    margin: 5px 0 10px 0;
+    padding: 0;
+    font-size: 18px;
+    font-weight: 600;
 }
 
 .right {float:right;}
@@ -118,7 +121,7 @@ dd
     height: 100%;
     z-index: 1;
     background-color: #3c4e5a;
-    box-shadow: 0 0 1px 1px #333;
+    box-shadow: 1px 0 1px 0 #333;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -127,12 +130,12 @@ dd
 #ktsn-tools {
     position: fixed;
     top: 0;
-    left: 100px;
+    left: 99px;
     width: 400px;
     height: 100%;
     z-index: 2;
     background-color: #fff;
-    box-shadow: 0 0 1px 1px #333;
+    box-shadow: 1px 0 1px 0 #333;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -253,6 +256,7 @@ dd
 
 .side-window
 {
+    padding:10px;
     display:none;
 }
 
@@ -301,7 +305,7 @@ dd
                 height: 0;
                 border-top: 10px solid transparent;
                 border-bottom: 10px solid transparent;
-                border-right: 10px solid #fafafa;
+                border-right: 10px solid #fff;
                 position: absolute;
                 right: 0;
                 top: 24px;
@@ -401,64 +405,88 @@ dd
     float:right;
 }
 
-.map-list
+.map-list, .layer-list, .option-list
 {
-    color: #000;
     list-style: none;
-    margin: 0;
     padding: 0;
-    font-size: 12px;
+    margin: 0;
+    border-top: 1px solid #f0f0f0;
 }
 
-    .map-list li
+    .map-list li,.layer-list li, .option-list li
     {
-        border-bottom: 1px solid #ccc;
-        padding: 8px 16px 8px 38px;
-        background: url(/images/klaus.png) no-repeat 4px 0;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        -webkit-user-select: none;
-        user-select: none;
-        cursor:pointer;
+        width: 100%;
+        padding: 8px 5px;
+        line-height: 18px;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        border-bottom: 1px solid #f0f0f0;
     }
 
-.map-list li:hover {
-    background-color:#ffeecc;
-}
-
-.map-list li.selected {
-    background-position-y:-28px;
-    background-color:#ffdca5;
-}
-
-.map-list li label {
-    width:16px;
-    display:inline-block;
-}
-
-.map-list li small {
-    float:right;
-    font-size:12px;
-}
-
-.map-list li span {
-    
-}
-
-.map-list li span::before {
-    width:16px;
-    padding-right:10px;
-    font-family:FontAwesome;
-    font-size:14px;
-}
-
-    .map-list li span.public::before
-    {
-        content:'\f09c'
+    .map-list li {
+        height: 50px;
     }
-    .map-list li span.private::before
-    {
-        content:'\f023'
+
+        .map-list li.selected
+        {
+            background: url(/images/tick.png) no-repeat right top;
+        }
+
+        .map-list li.selected, .map-list li:hover
+        {
+            background-color: #525252;
+            color: #fafafa;
+            cursor: pointer;
+        }
+
+            .map-list li:hover span, .map-list li:hover small, .map-list li:hover a
+            {
+                color: #fafafa !important;
+            }
+
+        .map-list li span
+        {
+            display: block;
+            color: #222;
+        }
+
+        .map-list li small
+        {
+            font-size: 12px;
+            color: #525252;
+            font-style: italic;
+        }
+
+        .map-list li.selected span, .map-list li.selected small, .map-list li.selected .bn-icon-delete
+        {
+            color: #fafafa;
+        }
+
+    .layer-list li {
+
+    }
+
+    .layer-list li span {
+        display: block;
+        color: #222;
+    }
+
+    .layer-list li small {
+        font-size:12px;
+        color: #525252;
+    }
+
+    .layer-list li small::before {
+        content:'\f041';
+        font-family:FontAwesome;
+        font-size:14px;
+        margin-right:4px;
+        display:inline-block;
+    }
+
+    .option-list li input,.option-list li label {
+        float:right;
     }
 
 

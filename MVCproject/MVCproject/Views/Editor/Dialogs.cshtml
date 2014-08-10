@@ -25,31 +25,6 @@
 
 </div>
 
-<div id="ktsn-dialogs-my" class="dialog-window">
-
-    <div style="float: left; width: 90px; padding:12px;">
-        <span class="dialog-icon sidebar-my">My Maps</span>
-    </div>
-
-    <div style="float: left; border-left: 1px solid #ccc; padding: 0; margin-left:12px; text-align: left;">
-        <div class="nano" style="height:400px; width:500px; position:relative;">
-        <ul class="map-list nano-content" id="map-list">
-            @foreach (var map in Model.maps)
-            {
-                <li data-id="@map.id"><span class="@map.access">@map.name</span> <small>@map.createdOn.ToString("MMM, dd yyyy")</small></li>
-            }
-        </ul>
-        </div>
-        <div style="text-align: right; border-top:1px solid #ccc; padding:12px;">
-            <button class="bnCreate" style="float:left;">New Map</button>
-            <button class="bnLoad">Load</button>
-            <button class="bnClose">Close</button>
-        </div>
-
-    </div>
-
-</div>
-
 <div id="ktsn-dialogs-new" class="dialog-window">
 
     <div style="float: left; width: 90px; padding:12px;">

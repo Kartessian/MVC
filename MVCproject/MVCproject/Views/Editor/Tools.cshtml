@@ -1,5 +1,24 @@
-﻿<div id="ktsn-dialogs-style" class="side-window nano">
-    <div class="nano-content" style="padding:4px;">
+﻿@model MVCproject.Default_Index
+
+<div id="ktsn-dialogs-my" class="side-window">
+
+    <a href="#" class="bnClose" style="float: right;"></a>
+    <button class="bnCreate right">New Map</button>
+    <h3>My Maps</h3>
+    <ul class="map-list">
+        @foreach (var map in Model.maps)
+        {
+            <li data-id="@map.id" class="@map.access">
+                <span>@map.name</span>
+                <a href="#" class="bn-icon-delete right"></a>
+                <small>@map.description</small>
+            </li>
+        }
+    </ul>
+</div>
+
+<div id="ktsn-dialogs-style" class="side-window">
+
         <a href="#" class="bnClose right"></a>
         <h3>Map Style</h3>
         <h4>Base Layer</h4>
@@ -58,13 +77,13 @@
                 <input type="checkbox" data-type="control" data-name="zoom" checked class="switch" id="c-zoom" /><label for="c-zoom"></label>
             </li>
         </ul>
-    </div>
+
 </div>
 
-<div id="ktsn-dialogs-layers" class="side-window nano">
-    <div class="nano-content" style="padding:4px;">
+<div id="ktsn-dialogs-layers" class="side-window">
+
         <a href="#" class="bnClose right"></a>
         <h3>Datasets</h3>
 
-    </div>
+
 </div>
