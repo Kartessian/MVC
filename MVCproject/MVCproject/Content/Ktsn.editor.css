@@ -137,6 +137,7 @@ dd
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     display:none;
+    overflow:hidden;
 }
 
 #ktsn-data
@@ -252,6 +253,7 @@ dd
 
 .side-window
 {
+    display:none;
 }
 
 .sidebar-menu {
@@ -587,9 +589,9 @@ dd
 .nano > .nano-content:focus {
   outline:none;
 }
-.nano > .nano-content::-webkit-scrollbar {
+/*.nano > .nano-content::-webkit-scrollbar {
   visibility: hidden;
-}
+}*/
 .has-scrollbar > .nano-content::-webkit-scrollbar {
   visibility: visible;
 }
