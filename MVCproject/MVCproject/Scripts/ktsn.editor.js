@@ -1,4 +1,4 @@
-﻿Number.prototype.formatMoney = function (decPlaces, thouSeparator, decSeparator) {
+﻿Number.prototype.formatNumber = function (decPlaces, thouSeparator, decSeparator) {
     var n = this, decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces, decSeparator = decSeparator == undefined ? "." : decSeparator, thouSeparator = thouSeparator == undefined ? "," : thouSeparator, sign = n < 0 ? "-" : "", i = parseInt(n = Math.abs(+n || 0).toFixed(decPlaces)) + "", j = (j = i.length) > 3 ? j % 3 : 0;
     return sign + (j ? i.substr(0, j) + thouSeparator : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator) + (decPlaces ? decSeparator + Math.abs(n - i).toFixed(decPlaces).slice(2) : "");
 };
@@ -268,7 +268,9 @@ var ktsn = {
                     var point = data[i];
                     layer.addPoint(new K.Point(point[1], point[2], { id: point[0] }));
                 }
-
+                template.find(".hidden").show().siblings(".ds-load").remove();
+                template.find("small").html(result.data.length.formatNumber(0, ',', '.'));
+                template.find("input").prop("checked", dataset.visible);
                 //use default click for now
                 //layer.onClick = function (point) {};
 

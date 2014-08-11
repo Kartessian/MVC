@@ -10,6 +10,7 @@ namespace MVCproject
     {
 
         [RelatedField]
+        [System.Web.Script.Serialization.ScriptIgnore] // prevent send this property when serializend the class to the client
         public string TableName
         {
             get { return "dataset_dots"; }

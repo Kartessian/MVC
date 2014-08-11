@@ -190,10 +190,13 @@ namespace MVCproject
             return database_.GetRecords<MapDataset>(new KeyValuePair<string, object>("access", "public"));
         }
 
+        /// <summary>
+        /// Return a list with all the datasets that are part of the specified map
+        /// </summary>
         public List<MapDataset> MapList(int mapId)
         {
             List<MapDataset> mapList = database_.GetRecords<MapDataset>(
-                "select d.* from datasets d " +
+                "select d.*, m.visible from datasets d " +
                 " inner join maps_datasets m on m.dataset_id = d.id and m.map_id = @id",
                 new KeyValuePair<string, object>("@id", mapId)
             );
