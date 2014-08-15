@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
     <link rel="stylesheet" href="/Content/Ktsn.editor.min.css" />
+    <link rel="stylesheet" href="/Content/spectrum.min.css" />
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 </head>
 <body>
@@ -16,10 +17,11 @@
     </script>
 
     <script src="//maps.googleapis.com/maps/api/js?key=@HttpContext.Current.Application["MapApiKey"]&sensor=false"></script>
-    <script src="/Scripts/nano.js"></script>
     <script src="/Scripts/ktsn.editor.js"></script>
     <script src="/Scripts/ktsn.drawing.js"></script>
     <script src="/Scripts/ktsn.gm.canvas.js"></script>
-    <script src="/Scripts/infobox.js"></script>
+    <script src="/Scripts/infobox.js" async></script>
+    <script src="/Scripts/nano.js" async></script>
+    <script src="/Scripts/spectrum.js" async></script>
 </body>
 </html>

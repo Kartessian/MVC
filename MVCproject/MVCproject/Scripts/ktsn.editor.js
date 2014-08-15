@@ -88,6 +88,9 @@ var ktsn = {
                 t._current.find(".bnClose,.bnSave,.bnLoad,.map-list li,a").off("click");
                 t._current.off("click");
                 t._current = null;
+
+                $("a.pick-color").spectrum("destroy");
+
             }
             $("#ktsn-busy-background,#ktsn-tools").hide();
             $("#ktsn-menu .selected").removeClass("selected");
@@ -147,9 +150,21 @@ var ktsn = {
                     });
                     break;
                 case "style":
-                    current.find("a.pick-color").on("click", function (e) {
-                        e.preventDefault();
-                        alert("Not implemented yet!");
+                    //current.find("a.pick-color").on("click", function (e) {
+                        //e.preventDefault();
+                        //alert("Not implemented yet!");
+                    //});
+                    $("#map-features input").off("change").on("change", function (e) {
+                        ktsn.map.setStyle(ktsn.dialogs.buildStyle());
+                    });
+                    $("a.pick-color").spectrum({
+                        showInitial: true,
+                        showPalette: true,
+                        showInput: true,
+                        change: function (color) {
+                            $(this).siblings("input").data("color", color.toHexString());
+                            ktsn.map.setStyle(ktsn.dialogs.buildStyle());
+                        }
                     });
                     break;
                 case "layers":
@@ -159,10 +174,39 @@ var ktsn = {
             }
 
             $(".nano:visible").nanoScroller({ alwaysVisible: true }, true);
+        },
+
+        buildStyle: function () {
+            var styles = [];
+            $.each($("#map-features input"), function (ix, input) {
+                input = $(input);
+
+                var entry = {
+                    stylers: [
+                        { visibility: input.prop("checked") ? "on" : "off" }
+                    ]
+                };
+
+                entry[input.data("type")] = input.data("name");
+
+                $.each(["color", "hue", "lightness", "saturation", "gamma", "inverse_lightness", "width", "weight"], function (ix, property) {
+                    if (input.data(property)) {
+                        var aux = {};
+                        aux[property] = input.data(property);
+                        entry.stylers.push(aux);
+                    }
+                });
+
+                styles.push(entry);
+
+            });
+            return styles;
         }
     },
 
     map: {
+
+        _map: null,
 
         _mapName: null,
 
@@ -284,8 +328,11 @@ var ktsn = {
             } else {
                 return this._mapName.html();
             }
-        }
+        },
 
+        setStyle: function (style) {
+            this._map.setOptions({ 'styles': style });
+        }
     },
 
     sidebar: {

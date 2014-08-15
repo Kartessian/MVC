@@ -189,6 +189,10 @@
     <Content Include="Content\Ktsn.login.min.css">
       <DependentUpon>Ktsn.login.css</DependentUpon>
     </Content>
+    <Content Include="Content\spectrum.css" />
+    <Content Include="Content\spectrum.min.css">
+      <DependentUpon>spectrum.css</DependentUpon>
+    </Content>
     <Content Include="Global.asax" />
     <Content Include="Images\back-pattern.png" />
     <Content Include="Images\bn-close.png" />
@@ -210,6 +214,9 @@
     <Content Include="Images\tick.png" />
     <Content Include="Scripts\demo.html" />
     <Content Include="Scripts\infobox.js" />
+    <Content Include="Scripts\infobox.min.js">
+      <DependentUpon>infobox.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\ktsn.actionCanvas.js" />
     <Content Include="Scripts\ktsn.drawing.js" />
     <Content Include="Scripts\ktsn.canvasLabels.js" />
@@ -219,6 +226,10 @@
     <Content Include="Scripts\nano.js" />
     <Content Include="Scripts\nano.min.js">
       <DependentUpon>nano.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\spectrum.js" />
+    <Content Include="Scripts\spectrum.min.js">
+      <DependentUpon>spectrum.js</DependentUpon>
     </Content>
     <Content Include="Templates\email.html" />
     <Content Include="Web.config">
@@ -284,6 +295,12 @@
   <ItemGroup>
     <None Include="Content\GoogleMapsStyle.json" />
     <Content Include="Views\Editor\Tools.cshtml" />
+    <Content Include="Scripts\spectrum.min.js.map">
+      <DependentUpon>spectrum.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\infobox.min.js.map">
+      <DependentUpon>infobox.js</DependentUpon>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
